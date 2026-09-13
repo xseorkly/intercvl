@@ -56,3 +56,6 @@ L’atelier Charte IA prolonge le LAB IA :
 5. import local des quatre synthèses ;
 6. Assemblée finale pour produire une charte de 10 à 12 articles ;
 7. génération du PDF complet puis enregistrement dans Drive.
+
+## Correctif génération PDF
+Le générateur PDF vérifie désormais le rendu avant l'envoi vers Drive. Le rendu HTML n'est plus placé hors écran. Pour les rapports très longs ou si le moteur graphique échoue, un PDF texte de secours multipage est généré automatiquement afin qu'aucune production ne soit enregistrée sous forme de page blanche.

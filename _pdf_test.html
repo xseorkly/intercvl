@@ -1,0 +1,16 @@
+<!doctype html><meta charset="utf-8"><title>WAIT</title>
+<script>
+window.html2pdf = function(){ return {set(){return this},from(){return this},toCanvas(){throw new Error('force fallback')}} };
+</script>
+<script src="drive-sync.js"></script>
+<body>WAIT</body>
+<script>
+(async()=>{
+  try{
+    const built=await window.IntercvlDriveSync.createPdfBlob(`<div class="preview-doc"><h1>INTER-CVL ZESE — Test PDF</h1><section><h2>Rotation 1</h2><p>Élèves : Léa, Youssef, Chloé.</p><div class="answer">Idée : utiliser l’IA pour apprendre, mais vérifier les informations.</div></section><section><h2>Charte finale</h2><p>Article 1 — Nous expliquons quand et comment nous avons utilisé l’IA.</p><p>Article 2 — Nous respectons l’image, la voix et les données des autres.</p></section></div>`, 'test.pdf');
+    const r=new FileReader();
+    r.onload=()=>{document.body.textContent=r.result;document.title='DONE'};
+    r.readAsDataURL(built.blob);
+  }catch(e){document.body.textContent='ERROR:'+e.stack;document.title='ERROR'}
+})();
+</script>

@@ -1,5 +1,5 @@
 /**
- * Inter-CVL ZESE — Réception des productions dans Google Drive
+ * Inter-CVL ZESE — Réception des productions dans Google Drive — v4
  *
  * Déployer ce script comme Application Web :
  *   - Exécuter en tant que : Moi
@@ -15,11 +15,34 @@ const MAX_PDF_BYTES = 15 * 1024 * 1024; // 15 Mo maximum par PDF
 const ALLOWED_ATELIERS = ['atelier1', 'atelier2', 'atelier3', 'atelier-ia', 'charte-ia'];
 
 function doGet() {
-  return json_({
-    ok: true,
-    service: 'INTERCVL ZESE Drive receiver',
-    version: 2
-  });
+  try {
+    // Ce test vérifie aussi que le script a bien été autorisé à utiliser Google Drive.
+    DriveApp.getRootFolder().getName();
+    return json_({
+      ok: true,
+      service: 'INTERCVL ZESE Drive receiver',
+      version: 4,
+      driveReady: true
+    });
+  } catch (err) {
+    return json_({
+      ok: false,
+      service: 'INTERCVL ZESE Drive receiver',
+      version: 4,
+      driveReady: false,
+      error: String(err && err.message ? err.message : err)
+    });
+  }
+}
+
+/**
+ * À exécuter UNE FOIS manuellement depuis l'éditeur Apps Script.
+ * Cela déclenche l'autorisation Google Drive et crée le dossier racine.
+ */
+function setupIntercvl() {
+  const root = getOrCreateFolder_(DriveApp.getRootFolder(), ROOT_FOLDER_NAME);
+  Logger.log('INTERCVL prêt : ' + root.getName());
+  return 'OK - ' + root.getName();
 }
 
 function doPost(e) {
@@ -60,8 +83,14 @@ function doPost(e) {
 
       let b64 = String(data.pdfBase64).replace(/^data:application\/pdf;base64,/, '').replace(/\s+/g, '');
       const bytes = Utilities.base64Decode(b64);
+      if (bytes.length < 1000) {
+        throw new Error('PDF invalide ou anormalement petit.');
+      }
       if (bytes.length > MAX_PDF_BYTES) {
         throw new Error('PDF trop volumineux (maximum 15 Mo).');
+      }
+      if (bytes[0] !== 37 || bytes[1] !== 80 || bytes[2] !== 68 || bytes[3] !== 70) {
+        throw new Error('Le fichier reçu n’est pas un PDF valide.');
       }
 
       const requested = cleanFilename_(data.pdfFileName || `${base}.pdf`);

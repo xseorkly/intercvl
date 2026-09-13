@@ -52,3 +52,27 @@ Le bouton **☁️ Envoyer une copie du carnet (JSON)** reste disponible. Il n'e
 ## Données
 
 Les réponses restent d'abord dans `localStorage` sur l'appareil de la table. Elles quittent l'appareil seulement lorsque l'utilisateur clique explicitement sur un bouton d'envoi ou sur le bouton de génération/enregistrement du PDF.
+
+## Correctif PDF blanc
+Cette version corrige le problème de PDF vide : le rendu graphique est vérifié avant l'envoi. Si le navigateur ne peut pas rendre correctement la mise en page graphique (document très long, limite de canvas, etc.), le site génère automatiquement un PDF texte de secours contenant toutes les traces textuelles au lieu d'envoyer une page blanche.
+
+Après avoir remplacé `Code.gs`, redéployez l'application Web afin d'utiliser la version 3 du récepteur.
+
+
+## Diagnostic v4 — à faire une seule fois
+
+1. Remplacez `Code.gs` par la version v4 fournie.
+2. Dans Apps Script, choisissez la fonction `setupIntercvl` puis cliquez sur **Exécuter**.
+3. Acceptez les autorisations Google Drive demandées.
+4. Faites **Déployer > Gérer les déploiements > Modifier**.
+5. Choisissez **Nouvelle version** puis vérifiez :
+   - **Exécuter en tant que : Moi** ;
+   - **Qui a accès : Tout le monde / Anyone** (accès sans connexion, si cette option est proposée).
+6. Cliquez sur **Déployer**.
+7. Ouvrez directement l'URL `/exec` dans le navigateur. Elle doit afficher quelque chose de proche de :
+
+```json
+{"ok":true,"service":"INTERCVL ZESE Drive receiver","version":4,"driveReady":true}
+```
+
+Si vous voyez une page Google, un écran de connexion, une erreur HTML ou `driveReady:false`, l'envoi depuis le site ne pourra pas fonctionner correctement.

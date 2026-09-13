@@ -345,12 +345,51 @@
   }
 
   async function post(payload) {
-    const res = await fetch(ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(payload)
-    });
-    return res.json();
+    let res;
+    try {
+      res = await fetch(ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload),
+        redirect: 'follow'
+      });
+    } catch (err) {
+      const e = new Error(
+        'Connexion à Apps Script impossible. Vérifiez que le déploiement est une Application Web accessible sans connexion et que vous utilisez bien l’URL /exec.'
+      );
+      e.cause = err;
+      e.code = 'NETWORK_OR_CORS';
+      throw e;
+    }
+
+    const text = await res.text();
+    const trimmed = String(text || '').trim();
+
+    if (!res.ok) {
+      const e = new Error(`Apps Script a répondu HTTP ${res.status}. ${trimmed.slice(0, 180)}`);
+      e.code = 'HTTP_ERROR';
+      e.status = res.status;
+      throw e;
+    }
+
+    if (!trimmed) {
+      const e = new Error('Apps Script a renvoyé une réponse vide. Vérifiez le déploiement et ses autorisations.');
+      e.code = 'EMPTY_RESPONSE';
+      throw e;
+    }
+
+    try {
+      return JSON.parse(trimmed);
+    } catch (err) {
+      const looksHtml = /<!doctype|<html|<head|<body/i.test(trimmed);
+      const e = new Error(looksHtml
+        ? 'Apps Script a renvoyé une page Google au lieu de JSON. Le déploiement n’est probablement pas accessible anonymement, n’est pas la bonne version, ou l’autorisation Drive n’a pas été accordée.'
+        : `Réponse Apps Script non reconnue : ${trimmed.slice(0, 180)}`
+      );
+      e.code = looksHtml ? 'HTML_INSTEAD_OF_JSON' : 'INVALID_JSON';
+      e.rawResponse = trimmed.slice(0, 500);
+      throw e;
+    }
   }
 
   async function send(atelier, tableName, jsonBackup, statusEl) {
@@ -396,8 +435,10 @@
       return { ok: false, error: reason, blob, filename: safeName, renderMode: mode };
     } catch (err) {
       if (blob) downloadBlob(blob, safeName);
-      setStatus(statusEl, '⚠️ PDF non envoyé : ' + String(err.message || err), 'err');
-      return { ok: false, error: String(err), blob, filename: safeName, renderMode: mode };
+      console.error('[Drive] Envoi PDF impossible :', err, err && err.rawResponse ? err.rawResponse : '');
+      const detail = String(err && err.message ? err.message : err);
+      setStatus(statusEl, '⚠️ Envoi Drive impossible : ' + detail + ' Le PDF a été téléchargé sur cet appareil pour ne rien perdre.', 'err');
+      return { ok: false, error: detail, code: err && err.code, blob, filename: safeName, renderMode: mode };
     }
   }
 
