@@ -59,3 +59,8 @@ L’atelier Charte IA prolonge le LAB IA :
 
 ## Correctif génération PDF
 Le générateur PDF vérifie désormais le rendu avant l'envoi vers Drive. Le rendu HTML n'est plus placé hors écran. Pour les rapports très longs ou si le moteur graphique échoue, un PDF texte de secours multipage est généré automatiquement afin qu'aucune production ne soit enregistrée sous forme de page blanche.
+
+
+## Mise en page PDF - version design
+
+Les PDF générés utilisent désormais une mise en page dédiée : couverture harmonisée AEFE/ZESE, sections structurées, blocs de réponses, tableaux améliorés, pagination et pied de page. Le contenu envoyé vers Drive est exactement le même PDF que celui généré localement.

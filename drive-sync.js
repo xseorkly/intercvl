@@ -3,6 +3,290 @@
   const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxeMAI2vOb_bn_R6JyXIfIcmzrtzrHe8kVJBK1nJjnaJ9GXPaMEvFv7vufA_Ww4pfVk4w/exec';
   const HTML2PDF_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
 
+  const PDF_CSS = `
+    .drive-pdf-render-host, .drive-pdf-render-host * { box-sizing: border-box; }
+    .drive-pdf-render-host .preview-doc {
+      font-family: Arial, Helvetica, sans-serif !important;
+      color: #242038 !important;
+      font-size: 13.2px !important;
+      line-height: 1.52 !important;
+      max-width: none !important;
+      width: 100% !important;
+      background: #fff !important;
+    }
+    .drive-pdf-render-host .preview-logos {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 20px !important;
+      padding: 0 0 12px !important;
+      margin: 0 0 16px !important;
+      border-bottom: 3px solid #c20a73 !important;
+    }
+    .drive-pdf-render-host .preview-logos img {
+      max-height: 54px !important;
+      max-width: 37% !important;
+      object-fit: contain !important;
+    }
+    .drive-pdf-render-host .workshop-cover,
+    .drive-pdf-render-host .charter-cover {
+      text-align: left !important;
+      padding: 20px 22px 21px !important;
+      margin: 0 0 20px !important;
+      border-radius: 16px !important;
+      background: linear-gradient(135deg,#211d47 0%,#30285f 58%,#8e0050 100%) !important;
+      color: #fff !important;
+      box-shadow: none !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host .workshop-cover .pdf-eyebrow,
+    .drive-pdf-render-host .charter-cover > span {
+      display: block !important;
+      margin: 0 0 8px !important;
+      color: #f4b9db !important;
+      font-size: 9px !important;
+      font-weight: 800 !important;
+      letter-spacing: .13em !important;
+      text-transform: uppercase !important;
+    }
+    .drive-pdf-render-host .workshop-cover h1,
+    .drive-pdf-render-host .charter-cover h1 {
+      margin: 0 !important;
+      color: #fff !important;
+      font-size: 28px !important;
+      line-height: 1.1 !important;
+      letter-spacing: -.02em !important;
+    }
+    .drive-pdf-render-host .workshop-cover h2 {
+      margin: 5px 0 0 !important;
+      color: #fff !important;
+      font-size: 17px !important;
+      line-height: 1.25 !important;
+      font-weight: 650 !important;
+    }
+    .drive-pdf-render-host .workshop-cover .pdf-table-name,
+    .drive-pdf-render-host .charter-cover p {
+      display: inline-block !important;
+      margin: 13px 0 0 !important;
+      padding: 6px 10px !important;
+      border: 1px solid rgba(255,255,255,.28) !important;
+      border-radius: 999px !important;
+      background: rgba(255,255,255,.10) !important;
+      color: #fff !important;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+    }
+    .drive-pdf-render-host .preview-doc > h1 {
+      margin: 0 0 3px !important;
+      color: #211d47 !important;
+      font-size: 25px !important;
+    }
+    .drive-pdf-render-host .preview-doc > h2 {
+      margin: 0 0 10px !important;
+      color: #c20a73 !important;
+      font-size: 17px !important;
+    }
+    .drive-pdf-render-host section {
+      margin: 18px 0 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+    }
+    .drive-pdf-render-host section > h2 {
+      margin: 0 0 12px !important;
+      padding: 9px 12px 9px 14px !important;
+      border-left: 5px solid #c20a73 !important;
+      border-radius: 8px !important;
+      background: #f4f0f7 !important;
+      color: #211d47 !important;
+      font-size: 17px !important;
+      line-height: 1.25 !important;
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+    .drive-pdf-render-host h3 {
+      margin: 12px 0 5px !important;
+      color: #3c3651 !important;
+      font-size: 12.8px !important;
+      line-height: 1.3 !important;
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+    .drive-pdf-render-host h4 {
+      margin: 10px 0 5px !important;
+      color: #4c4660 !important;
+      font-size: 12px !important;
+      break-after: avoid !important;
+      page-break-after: avoid !important;
+    }
+    .drive-pdf-render-host p { margin: 6px 0 !important; }
+    .drive-pdf-render-host .answer {
+      white-space: pre-wrap !important;
+      margin: 0 0 9px !important;
+      padding: 9px 11px !important;
+      border: 1px solid #e5dce6 !important;
+      border-left: 4px solid #c20a73 !important;
+      border-radius: 8px !important;
+      background: #fbf8fb !important;
+      color: #292535 !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host .pdf-answer-block {
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host ul,
+    .drive-pdf-render-host ol { padding-left: 22px !important; margin: 7px 0 !important; }
+    .drive-pdf-render-host li { margin: 3px 0 !important; }
+    .drive-pdf-render-host .concept-summary,
+    .drive-pdf-render-host .print-story,
+    .drive-pdf-render-host .report-candidate,
+    .drive-pdf-render-host .report-rule,
+    .drive-pdf-render-host .report-dilemma,
+    .drive-pdf-render-host .report-lab {
+      border-radius: 9px !important;
+      box-shadow: none !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host .concept-summary,
+    .drive-pdf-render-host .print-story {
+      margin: 8px 0 !important;
+      padding: 10px 12px !important;
+      border: 1px solid #e4e0ea !important;
+      background: #faf9fc !important;
+    }
+    .drive-pdf-render-host .manifesto-quote {
+      margin: 10px 0 14px !important;
+      padding: 16px 18px !important;
+      border-radius: 12px !important;
+      border: 1px solid #e8cadd !important;
+      background: #fff3f9 !important;
+      color: #7f064d !important;
+      font-size: 17px !important;
+      font-weight: 750 !important;
+      line-height: 1.4 !important;
+      text-align: center !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host .print-plan {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      margin: 9px 0 14px !important;
+      font-size: 11px !important;
+    }
+    .drive-pdf-render-host .print-plan th {
+      padding: 8px !important;
+      background: #211d47 !important;
+      color: #fff !important;
+      text-align: left !important;
+      border: 1px solid #211d47 !important;
+    }
+    .drive-pdf-render-host .print-plan td {
+      padding: 8px !important;
+      border: 1px solid #ddd8e2 !important;
+      vertical-align: top !important;
+    }
+    .drive-pdf-render-host .print-plan tr:nth-child(even) td { background: #faf9fc !important; }
+    .drive-pdf-render-host img { max-width: 100% !important; }
+    .drive-pdf-render-host section img:not(.preview-logos img) {
+      border-radius: 10px !important;
+      border: 1px solid #ded8e2 !important;
+    }
+    .drive-pdf-render-host .report-pole {
+      margin-top: 22px !important;
+      break-before: page !important;
+      page-break-before: always !important;
+    }
+    .drive-pdf-render-host .report-pole-head {
+      padding: 13px 14px !important;
+      border: 1px solid #ddd8e8 !important;
+      border-left: 5px solid #c20a73 !important;
+      border-radius: 10px !important;
+      background: #f7f4fa !important;
+    }
+    .drive-pdf-render-host .report-pole-head h2 {
+      margin: 1px 0 3px !important;
+      color: #211d47 !important;
+      font-size: 17px !important;
+    }
+    .drive-pdf-render-host .report-rotations { gap: 12px !important; }
+    .drive-pdf-render-host .report-rotation {
+      padding: 12px !important;
+      border: 1px solid #ded9e4 !important;
+      border-radius: 10px !important;
+      background: #fff !important;
+    }
+    .drive-pdf-render-host .report-rotation-title {
+      padding-bottom: 7px !important;
+      margin-bottom: 7px !important;
+      border-bottom: 1px solid #ece8ef !important;
+    }
+    .drive-pdf-render-host .report-rotation-title h3 { margin: 0 !important; color: #c20a73 !important; }
+    .drive-pdf-render-host .report-mini-grid { gap: 7px !important; margin: 9px 0 !important; }
+    .drive-pdf-render-host .report-mini-grid > div {
+      padding: 8px !important;
+      border: 1px solid #e7e3eb !important;
+      border-radius: 8px !important;
+      background: #faf9fc !important;
+    }
+    .drive-pdf-render-host .report-dilemma {
+      padding: 10px 12px !important;
+      border: 1px solid #ead39a !important;
+      background: #fff9e9 !important;
+    }
+    .drive-pdf-render-host .report-rule {
+      padding: 9px 11px !important;
+      border: 1px solid #ddd8ef !important;
+      border-left: 4px solid #655ba5 !important;
+      background: #f8f7fd !important;
+    }
+    .drive-pdf-render-host .report-candidate {
+      padding: 10px 11px !important;
+      border: 1px solid #e2dde6 !important;
+      background: #fff !important;
+    }
+    .drive-pdf-render-host .print-charter-article {
+      display: grid !important;
+      grid-template-columns: 38px 1fr !important;
+      gap: 12px !important;
+      margin: 0 0 8px !important;
+      padding: 11px 12px !important;
+      border: 1px solid #e2dce5 !important;
+      border-radius: 10px !important;
+      background: #fff !important;
+      break-inside: avoid !important;
+      page-break-inside: avoid !important;
+    }
+    .drive-pdf-render-host .print-charter-article > span {
+      width: 34px !important;
+      height: 34px !important;
+      display: grid !important;
+      place-items: center !important;
+      border-radius: 9px !important;
+      background: #c20a73 !important;
+      color: #fff !important;
+      font-size: 14px !important;
+      font-weight: 900 !important;
+    }
+    .drive-pdf-render-host .print-charter-article small {
+      color: #8e0050 !important;
+      font-size: 9px !important;
+      font-weight: 800 !important;
+      letter-spacing: .06em !important;
+      text-transform: uppercase !important;
+    }
+    .drive-pdf-render-host .print-charter-article h3 { margin: 2px 0 4px !important; font-size: 14px !important; }
+    .drive-pdf-render-host .print-charter-article p { margin: 0 !important; }
+    .drive-pdf-render-host .page-break-before {
+      break-before: page !important;
+      page-break-before: always !important;
+    }
+  `;
+
   function setStatus(el, text, cls) {
     if (!el) return;
     el.textContent = text;
@@ -90,7 +374,7 @@
       pointerEvents: 'none',
       fontFamily: 'Arial, sans-serif'
     });
-    host.innerHTML = html;
+    host.innerHTML = `<style>${PDF_CSS}</style>${html}`;
     document.body.appendChild(host);
     document.body.appendChild(cover);
     return { host, cover };
@@ -137,9 +421,9 @@
 
       const scale = renderScaleFor(host);
       const options = {
-        margin: [8, 8, 8, 8],
+        margin: [11, 10, 16, 10],
         filename,
-        image: { type: 'jpeg', quality: 0.90 },
+        image: { type: 'jpeg', quality: 0.96 },
         html2canvas: {
           scale,
           useCORS: true,
@@ -155,7 +439,7 @@
         pagebreak: {
           mode: ['css', 'legacy'],
           before: '.page-break-before',
-          avoid: ['.print-charter-article', '.report-candidate', '.report-rule']
+          avoid: ['.print-charter-article', '.report-candidate', '.report-rule', '.answer', '.concept-summary', '.print-story', '.report-dilemma']
         }
       };
 
@@ -166,6 +450,25 @@
 
       const pdfWorker = worker.toPdf();
       const pdf = await pdfWorker.get('pdf');
+
+      // Finition éditoriale : pied de page discret et pagination sur toutes les pages.
+      try {
+        const totalPages = pdf.internal.getNumberOfPages();
+        for (let pageNo = 1; pageNo <= totalPages; pageNo++) {
+          pdf.setPage(pageNo);
+          pdf.setDrawColor(224, 219, 229);
+          pdf.setLineWidth(0.2);
+          pdf.line(12, 287.5, 198, 287.5);
+          pdf.setFont('helvetica', 'normal');
+          pdf.setFontSize(7.5);
+          pdf.setTextColor(105, 100, 118);
+          pdf.text('INTER-CVL ZESE - Nicosie', 12, 292.2);
+          pdf.text(`Page ${pageNo} / ${totalPages}`, 198, 292.2, { align: 'right' });
+        }
+      } catch (footerError) {
+        console.warn('[PDF] pagination non ajoutée :', footerError);
+      }
+
       const blob = pdf.output('blob');
       if (!blob || blob.size < 1800) throw new Error('Le fichier PDF généré est anormalement petit.');
       return { blob, mode: 'graphique' };

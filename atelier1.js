@@ -142,14 +142,14 @@
     final_device:'Dispositif de mise en relation',final_operation:'Fonctionnement du lien',final_next:'Action dès la semaine prochaine'
   };
   function participantsHtml(r){const list=state.participants[r]||[];return list.length?list.map(p=>`${esc(p.name)} <em>(${esc(p.school)})</em>`).join(' • '):'<em>Aucun nom renseigné</em>'}
-  function answers(keys){return keys.map(k=>`<h3>${esc(labelMap[k]||k)}</h3><div class="answer">${esc(state.fields[k]||'—')}</div>`).join('')}
+  function answers(keys){return keys.map(k=>`<div class="pdf-answer-block"><h3>${esc(labelMap[k]||k)}</h3><div class="answer">${esc(state.fields[k]||'—')}</div></div>`).join('')}
   function summaryHtml(){
     const resil=state.selected.r4_resilience||'—'; const canvasImg=state.canvas?`<img src="${state.canvas}" style="width:100%;border:1px solid #ddd;border-radius:8px">`:'<div class="answer">Aucun schéma réalisé.</div>';
     const grouped={};allPeople().forEach(p=>(grouped[p.school]||=[]).push(p.name));
     const all=Object.entries(grouped).map(([s,n])=>`<div><strong>${esc(s)}</strong> — ${n.map(esc).join(', ')}</div>`).join('')||'—';
     return `<div class="preview-doc">
       <div class="preview-logos"><img src="assets/logo-zese.png"><img src="assets/logo-aefe.png"></div>
-      <h1>INTER-CVL ZESE — Nicosie</h1><h2>Atelier 1 — Faire réseau entre établissements</h2><p><strong>${esc(state.tableName||'Table non renseignée')}</strong></p>
+      <div class="workshop-cover"><span class="pdf-eyebrow">INTER-CVL ZESE • NICOSIE • CARNET DE TRACES</span><h1>Atelier 1</h1><h2>Faire réseau entre établissements</h2><p class="pdf-table-name">${esc(state.tableName||'Table non renseignée')}</p></div>
       <section><h2>Rotation 1 — Identifier le réseau réel</h2><p><strong>Prénoms du groupe :</strong> ${participantsHtml(1)}</p>${answers(['r1_known','r1_unknown','r1_links','r1_reflection','r1_relay'])}</section>
       <section><h2>Rotation 2 — Identifier les freins</h2><p><strong>Prénoms du groupe :</strong> ${participantsHtml(2)}</p>${answers(['r2_ambassador','r2_time','r2_visibility','r2_entry','r2_complexity','r2_priority','r2_priority_reason','r2_reflection','r2_relay'])}</section>
       <section><h2>Rotation 3 — Imaginer une action</h2><p><strong>Prénoms du groupe :</strong> ${participantsHtml(3)}</p>${answers(['r3_ambassador','r3_idea','r3_who','r3_why','r3_join','r3_tool','r3_first','r3_reflection','r3_relay'])}</section>

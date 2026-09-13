@@ -214,3 +214,9 @@ dialog{border:0;border-radius:24px;box-shadow:0 30px 100px rgba(0,0,0,.25);paddi
 .howto-steps{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.howto-steps article{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start;padding:15px;border:1px solid #e7e9f2;border-radius:16px;background:#fff}.howto-steps article>span{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:#26234e;color:#fff;font-weight:900}.howto-steps h4{margin:.1rem 0 .25rem;font-size:1rem}.howto-steps p{margin:0;color:#66616f;line-height:1.5;font-size:.93rem}
 .howto-warning,.howto-finish{margin-top:14px;padding:14px 16px;border-radius:14px;line-height:1.55}.howto-warning{background:#fff7df;border:1px solid #efd798;color:#5b4814}.howto-finish{background:#edf8f2;border:1px solid #cae9d7;color:#23583a}.ia-howto{margin-top:18px}
 @media(max-width:900px){.intro-grid>.intro-card,.intro-grid>.student-howto{grid-column:1/-1;grid-row:auto}.howto-steps{grid-template-columns:1fr}.student-howto-head{display:block}.howto-icon{margin-bottom:10px}}
+
+/* Aperçu / PDF - couverture éditoriale harmonisée */
+.workshop-cover{margin:0 0 22px;padding:22px 24px;border-radius:18px;background:linear-gradient(135deg,#211d47 0%,#30285f 58%,#8e0050 100%);color:#fff}
+.workshop-cover .pdf-eyebrow{display:block;margin-bottom:8px;color:#f4b9db;font-size:.72rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+.workshop-cover h1{margin:0!important;color:#fff!important;font-size:2rem!important;line-height:1.08}.workshop-cover h2{margin:.35rem 0 0!important;color:#fff!important;font-size:1.2rem!important}.workshop-cover .pdf-table-name{display:inline-block;margin:14px 0 0!important;padding:7px 11px;border:1px solid rgba(255,255,255,.28);border-radius:999px;background:rgba(255,255,255,.10);color:#fff;font-weight:800}
+.pdf-answer-block{break-inside:avoid;page-break-inside:avoid}
