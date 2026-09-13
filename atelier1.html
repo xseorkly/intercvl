@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inter-CVL ZESE — Atelier 1 : Faire réseau</title>
+  <meta name="description" content="Carnet interactif de l'atelier 1 de l'Inter-CVL ZESE à Nicosie.">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="drive-sync.js"></script>
+  <script defer src="atelier1.js"></script>
+</head>
+<body>
+  <div class="topbar"><a class="home-link" href="index.html">← Retour à l’accueil des ateliers</a><a class="source-link" href="supports/Atelier-1.pdf" target="_blank">Voir le support PDF</a></div>
+  <header class="hero">
+    <div class="brand-row">
+      <img class="brand brand-zese" src="assets/logo-zese.png" alt="IRF Europe du Sud-Est — AEFE">
+      <div class="hero-title">
+        <span class="eyebrow">INTER-CVL • ZESE • NICOSIE</span>
+        <h1>Atelier 1 — Faire réseau entre établissements</h1>
+        <p>Un carnet collectif qui reste à la table et s'enrichit à chaque rotation.</p>
+      </div>
+      <img class="brand brand-aefe" src="assets/logo-aefe.png" alt="AEFE — Agence pour l'enseignement français à l'étranger">
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="Navigation de l'atelier">
+      <section class="card compact session-card">
+        <h2>Votre table</h2>
+        <label>Nom de la table / groupe
+          <input id="tableName" type="text" placeholder="Ex. Table 3 — Agora">
+        </label>
+        <div class="save-status" id="saveStatus">💾 Sauvegarde locale active</div>
+      </section>
+
+      <nav class="steps" id="stepsNav">
+        <button data-step="0" class="step active"><span>0</span>Accueil</button>
+        <button data-step="1" class="step"><span>1</span>Réseau réel</button>
+        <button data-step="2" class="step"><span>2</span>Freins</button>
+        <button data-step="3" class="step"><span>3</span>Action</button>
+        <button data-step="4" class="step"><span>4</span>Durabilité</button>
+        <button data-step="5" class="step"><span>✓</span>Synthèse</button>
+      </nav>
+
+      <section class="card compact timer-card">
+        <div class="timer-top">
+          <div>
+            <span class="small-label">Rotation</span>
+            <strong id="timerLabel">Prêt</strong>
+          </div>
+          <div id="timerDisplay" class="timer-display">10:00</div>
+        </div>
+        <div class="timer-actions">
+          <button id="timerStart" class="btn primary small">▶ Démarrer</button>
+          <button id="timerPause" class="btn ghost small">⏸</button>
+          <button id="timerReset" class="btn ghost small">↺</button>
+        </div>
+      </section>
+
+      <section class="card compact privacy-card">
+        <strong>🔒 Vos données restent sous votre contrôle</strong>
+        <p>Vos notes sont sauvegardées sur cet appareil. Elles sont envoyées uniquement lorsque vous choisissez d’enregistrer le PDF ou une copie du carnet dans le Drive de l’équipe organisatrice.</p>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <section class="panel visible" data-panel="0">
+        <div class="intro-grid">
+          <div>
+            <span class="kicker">Comment fonctionne cet atelier ?</span>
+            <h2>40 minutes, 4 rotations, une production commune</h2>
+            <p class="lead">Vous venez de plusieurs établissements. Le carnet reste sur votre table. Toutes les 10 minutes, <strong>une seule personne de chaque groupe</strong> devient ambassadeur·drice et rejoint une autre table ; le reste du groupe reste sur place et accueille un nouvel ambassadeur.</p>
+
+            <div class="timeline">
+              <article><b>0–10 min</b><span>Identifier le réseau réel</span></article>
+              <article><b>10–20 min</b><span>Identifier les freins</span></article>
+              <article><b>20–30 min</b><span>Imaginer une action</span></article>
+              <article><b>30–40 min</b><span>Faire durer le lien</span></article>
+            </div>
+
+            <div class="callout">
+              <span class="callout-icon">🔄</span>
+              <div><strong>À chaque rotation</strong><p>Une personne différente quitte votre groupe comme ambassadeur·drice. Le reste du groupe reste à la table, accueille l'ambassadeur qui arrive, écoute ce qu'il apporte puis enrichit le travail déjà commencé.</p></div>
+            </div>
+          </div>
+
+        <section class="student-howto">
+          <div class="student-howto-head"><span class="howto-icon">🧭</span><div><span class="kicker">Les règles, étape par étape</span><h3>Comment vous travaillez pendant les 40 minutes</h3><p>L'ordinateur ou la tablette reste à la table. Votre groupe reste presque entièrement sur place : à chaque signal, <strong>une seule personne part comme ambassadeur·drice</strong> et un nouvel ambassadeur arrive d'une autre table.</p></div></div>
+          <div class="howto-steps">
+            <article><span>1</span><div><h4>Commencez avec votre groupe</h4><p>Ajoutez les prénoms et les établissements des personnes autour de la table. Pendant 10 minutes, répondez aux questions de la rotation et écrivez votre réflexion collective.</p></div></article>
+            <article><span>2</span><div><h4>Choisissez un ambassadeur</h4><p>À la fin des 10 minutes, choisissez <strong>une personne</strong> qui quitte votre table. Elle emporte les idées principales, les points de débat et les difficultés rencontrées.</p></div></article>
+            <article><span>3</span><div><h4>Accueillez un nouvel ambassadeur</h4><p>Le reste du groupe reste à la table. Retirez de la liste le prénom de la personne partie, puis ajoutez le prénom et l'établissement de la personne qui arrive.</p></div></article>
+            <article><span>4</span><div><h4>Écoutez ce qu'il ou elle apporte</h4><p>Avant de poursuivre, l'ambassadeur qui arrive explique ce qui a été produit à sa table précédente. Notez cet apport dans la zone <strong>« Ce que l'ambassadeur apporte avec lui »</strong>.</p></div></article>
+            <article><span>5</span><div><h4>Poursuivez sans effacer</h4><p>Lisez ce qui a déjà été écrit sur votre table. Complétez, nuancez ou questionnez les idées. Les traces des rotations précédentes restent visibles.</p></div></article>
+            <article><span>6</span><div><h4>Changez d'ambassadeur à la rotation suivante</h4><p>À chaque nouvelle rotation, une <strong>personne différente</strong> devient ambassadeur·drice. Au bout de 4 rotations, votre table possède une production enrichie par plusieurs établissements.</p></div></article>
+          </div>
+          <div class="howto-warning"><strong>À retenir :</strong> ce n'est pas tout le groupe qui change de table. <strong>Une seule personne part à chaque rotation.</strong> L'ordinateur et le travail de la table restent sur place.</div>
+          <div class="howto-finish"><strong>🏁 À la fin :</strong> relisez les 4 rotations, construisez votre proposition finale et générez le PDF de votre table avec toutes les traces.</div>
+        </section>
+          <div class="intro-card">
+            <h3>Objectif final</h3>
+            <p>Repartir avec un dispositif de mise en relation, une représentation du fonctionnement du lien et une action concrète à engager rapidement.</p>
+            <ul class="checklist">
+              <li>🤝 Coopération</li>
+              <li>🧠 Intelligence collective</li>
+              <li>🔄 Reformulation</li>
+              <li>✨ Enrichissement croisé</li>
+            </ul>
+            <button class="btn primary wide" data-go="1">Commencer l'atelier →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 1 -->
+      <section class="panel" data-panel="1">
+        <div class="section-heading">
+          <div><span class="kicker">Rotation 1 • 0–10 min</span><h2>Identifier le réseau réel</h2></div>
+          <div class="phase-badge">01</div>
+        </div>
+        <p class="lead">Quels liens existent déjà entre les établissements ? Lesquels sont invisibles, occasionnels ou inexistants ?</p>
+
+        <div class="contributors" data-rotation="1"></div>
+
+        <div class="cards-3">
+          <article class="question-card">
+            <h3>🏫 Établissements connus</h3>
+            <p>Quels établissements connaissez-vous déjà ? Depuis quand ? Comment ces liens se sont-ils créés ?</p>
+            <textarea data-field="r1_known" placeholder="Vos constats, exemples, noms d'établissements, types d'échanges…"></textarea>
+          </article>
+          <article class="question-card">
+            <h3>🌫️ Établissements inconnus</h3>
+            <p>Quels établissements restent en dehors de votre champ de connaissance ? Pourquoi ?</p>
+            <textarea data-field="r1_unknown" placeholder="Ce qui reste invisible ou difficile à identifier…"></textarea>
+          </article>
+          <article class="question-card">
+            <h3>🔗 État des liens actuels</h3>
+            <p>Les relations sont-elles formelles ou informelles ? Régulières ou occasionnelles ? Délibérées ou dues au hasard ?</p>
+            <textarea data-field="r1_links" placeholder="Décrivez la nature des connexions actuelles…"></textarea>
+          </article>
+        </div>
+
+        <article class="reflection-card">
+          <div class="reflection-title"><span>🧠</span><div><span class="kicker">Synthèse du groupe</span><h3>NOTRE RÉFLEXION</h3></div></div>
+          <p>Après avoir répondu aux questions, rassemblez ici les idées essentielles, les désaccords éventuels et ce que vous retenez collectivement.</p>
+          <textarea data-field="r1_reflection" placeholder="Notre réflexion collective sur le réseau réel…"></textarea>
+        </article>
+
+        <article class="relay-card">
+          <div><span>🗣️</span><h3>À transmettre à la rotation suivante</h3></div>
+          <textarea data-field="r1_relay" placeholder="En 2 ou 3 phrases : qu'est-ce que le prochain groupe doit absolument savoir ?"></textarea>
+        </article>
+        <div class="nav-actions"><button class="btn ghost" data-go="0">← Accueil</button><button class="btn primary" data-go="2">Rotation suivante →</button></div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="panel" data-panel="2">
+        <div class="section-heading">
+          <div><span class="kicker">Rotation 2 • 10–20 min</span><h2>Identifier les freins à la mise en relation</h2></div>
+          <div class="phase-badge">02</div>
+        </div>
+        <p class="lead">Avant de chercher des solutions, identifiez ce qui limite réellement les échanges entre établissements.</p>
+
+        <div class="previous-note"><strong>💬 Ce que la rotation précédente de cette table transmet :</strong><div id="relay1Preview">Aucune note pour le moment.</div></div>
+        <article class="ambassador-card">
+          <div class="ambassador-title"><span>🎒</span><div><span class="kicker">Nouvel apport</span><h3>Ce que l’ambassadeur qui arrive apporte avec lui</h3></div></div>
+          <p>Notez ce qu’il ou elle rapporte de sa table d’origine : une idée forte, un constat, une proposition, une question ou un désaccord utile.</p>
+          <textarea data-field="r2_ambassador" placeholder="L’ambassadeur nous apporte…"></textarea>
+        </article>
+        <div class="contributors" data-rotation="2"></div>
+
+        <div class="obstacle-grid">
+          <article class="obstacle"><div class="obstacle-icon">🕒</div><h3>Temps</h3><p>Qu'est-ce qui manque concrètement pour se connecter ? Le temps est-il vraiment le seul obstacle ?</p><textarea data-field="r2_time" placeholder="Notes du groupe…"></textarea></article>
+          <article class="obstacle"><div class="obstacle-icon">🔍</div><h3>Visibilité</h3><p>Que savez-vous de ce que font les autres établissements ? Comment l'avez-vous appris ?</p><textarea data-field="r2_visibility" placeholder="Notes du groupe…"></textarea></article>
+          <article class="obstacle"><div class="obstacle-icon">🚪</div><h3>Porte d'entrée</h3><p>Par où commencer pour contacter un établissement inconnu ? Qu'est-ce qui retient ?</p><textarea data-field="r2_entry" placeholder="Notes du groupe…"></textarea></article>
+          <article class="obstacle"><div class="obstacle-icon">⚙️</div><h3>Complexité perçue</h3><p>Qu'est-ce qui semble trop compliqué dans la collaboration ? D'où vient cette impression ?</p><textarea data-field="r2_complexity" placeholder="Notes du groupe…"></textarea></article>
+        </div>
+
+        <div class="priority-box">
+          <div><span class="kicker">Choix collectif</span><h3>Quel frein paraît prioritaire ?</h3></div>
+          <select data-field="r2_priority">
+            <option value="">Choisir…</option><option>Temps</option><option>Visibilité</option><option>Absence de porte d'entrée</option><option>Complexité perçue</option><option>Autre</option>
+          </select>
+          <textarea data-field="r2_priority_reason" placeholder="Pourquoi ce frein est-il prioritaire ?"></textarea>
+        </div>
+
+        <article class="reflection-card">
+          <div class="reflection-title"><span>🧠</span><div><span class="kicker">Synthèse du groupe</span><h3>NOTRE RÉFLEXION</h3></div></div>
+          <p>Après l’analyse des freins et l’apport de l’ambassadeur, formulez ce que votre groupe comprend maintenant du problème.</p>
+          <textarea data-field="r2_reflection" placeholder="Notre réflexion collective sur les freins et les priorités…"></textarea>
+        </article>
+        <article class="relay-card"><div><span>🗣️</span><h3>À transmettre à la rotation suivante</h3></div><textarea data-field="r2_relay" placeholder="Le constat essentiel et la question que vous transmettez…"></textarea></article>
+        <div class="nav-actions"><button class="btn ghost" data-go="1">← Retour</button><button class="btn primary" data-go="3">Rotation suivante →</button></div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="panel" data-panel="3">
+        <div class="section-heading">
+          <div><span class="kicker">Rotation 3 • 20–30 min</span><h2>Imaginer une action pour faire réseau</h2></div>
+          <div class="phase-badge">03</div>
+        </div>
+        <p class="lead">Transformez les constats précédents en une action simple, inclusive et réellement réalisable.</p>
+        <div class="previous-note"><strong>💬 Ce que la rotation précédente de cette table transmet :</strong><div id="relay2Preview">Aucune note pour le moment.</div></div>
+        <article class="ambassador-card">
+          <div class="ambassador-title"><span>🎒</span><div><span class="kicker">Nouvel apport</span><h3>Ce que l’ambassadeur qui arrive apporte avec lui</h3></div></div>
+          <p>Notez l’idée ou le questionnement qu’il ou elle apporte depuis la table précédente et qui peut enrichir votre proposition.</p>
+          <textarea data-field="r3_ambassador" placeholder="L’ambassadeur nous apporte…"></textarea>
+        </article>
+        <div class="contributors" data-rotation="3"></div>
+
+        <div class="project-builder">
+          <label class="full">💡 Nom ou idée du dispositif<textarea data-field="r3_idea" placeholder="Ex. Rendez-vous trimestriel inter-CVL, réseau des éco-délégués, binômes d'établissements…"></textarea></label>
+          <label>👥 Qui ferait quoi ?<textarea data-field="r3_who" placeholder="Qui peut faire quoi ? Vous, les adultes accompagnateurs, les établissements…"></textarea></label>
+          <label>🎯 Pourquoi cette répartition ?<textarea data-field="r3_why" placeholder="Ce qui rend cette organisation pertinente…"></textarea></label>
+          <label>🚪 Comment un nouvel établissement pourrait-il rejoindre ?<textarea data-field="r3_join" placeholder="Porte d'entrée, personne ressource, procédure simple…"></textarea></label>
+          <label>🛠️ Quel outil ou format semblerait naturel ?<textarea data-field="r3_tool" placeholder="Visio, canal partagé, rencontre, pad, formulaire, binômes…"></textarea></label>
+          <label class="full">👣 Quel serait le tout premier geste ?<textarea data-field="r3_first" placeholder="Une action faisable très rapidement et clairement attribuée…"></textarea></label>
+        </div>
+        <article class="reflection-card">
+          <div class="reflection-title"><span>🧠</span><div><span class="kicker">Synthèse du groupe</span><h3>NOTRE RÉFLEXION</h3></div></div>
+          <p>Prenez du recul : qu’est-ce qui vous paraît le plus pertinent dans l’action imaginée ? Qu’est-ce qui doit encore être amélioré ?</p>
+          <textarea data-field="r3_reflection" placeholder="Notre réflexion collective sur l’action imaginée…"></textarea>
+        </article>
+        <article class="relay-card"><div><span>🗣️</span><h3>À transmettre à la rotation suivante</h3></div><textarea data-field="r3_relay" placeholder="Résumez l'idée proposée et ce qu'il reste à consolider…"></textarea></article>
+        <div class="nav-actions"><button class="btn ghost" data-go="2">← Retour</button><button class="btn primary" data-go="4">Rotation suivante →</button></div>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="panel" data-panel="4">
+        <div class="section-heading">
+          <div><span class="kicker">Rotation 4 • 30–40 min</span><h2>Structurer le lien pour qu'il dure</h2></div>
+          <div class="phase-badge">04</div>
+        </div>
+        <p class="lead">Comment éviter l'effet « one shot » et permettre à d'autres de reprendre la dynamique ?</p>
+        <div class="previous-note"><strong>💬 Ce que la rotation précédente de cette table transmet :</strong><div id="relay3Preview">Aucune note pour le moment.</div></div>
+        <article class="ambassador-card">
+          <div class="ambassador-title"><span>🎒</span><div><span class="kicker">Nouvel apport</span><h3>Ce que l’ambassadeur qui arrive apporte avec lui</h3></div></div>
+          <p>Notez ce qu’il ou elle rapporte de l’autre table et qui peut aider à rendre votre proposition plus durable ou plus facilement transmissible.</p>
+          <textarea data-field="r4_ambassador" placeholder="L’ambassadeur nous apporte…"></textarea>
+        </article>
+        <div class="contributors" data-rotation="4"></div>
+
+        <div class="cards-3">
+          <article class="question-card"><h3>🗓️ Action ponctuelle ou régulière ?</h3><p>Quelle fréquence serait réaliste ? Qu'est-ce qui permettrait de la tenir ?</p><textarea data-field="r4_frequency" placeholder="Fréquence, rythme, conditions réalistes…"></textarea></article>
+          <article class="question-card"><h3>♻️ Éviter l'effet « one shot »</h3><p>Pourquoi les actions s'arrêtent-elles ? Que prévoir dès le départ pour assurer la continuité ?</p><textarea data-field="r4_sustain" placeholder="Conditions de pérennité…"></textarea></article>
+          <article class="question-card"><h3>🤲 Passer le relais</h3><p>Comment d'autres peuvent-ils reprendre ? Que faut-il transmettre et documenter ?</p><textarea data-field="r4_handover" placeholder="Transmission, documentation, référents…"></textarea></article>
+        </div>
+
+        <div class="stress-test">
+          <div><span class="kicker">Test de résistance</span><h3>Si la personne motrice quitte l'établissement demain, votre dispositif continue-t-il ?</h3></div>
+          <div class="segmented" data-segment="r4_resilience">
+            <button data-value="Non">🔴 Non</button><button data-value="Peut-être">🟠 Peut-être</button><button data-value="Oui">🟢 Oui</button>
+          </div>
+          <textarea data-field="r4_resilience_reason" placeholder="Qu'est-ce qui rendrait le dispositif plus transmissible ?"></textarea>
+        </div>
+        <article class="reflection-card">
+          <div class="reflection-title"><span>🧠</span><div><span class="kicker">Synthèse du groupe</span><h3>NOTRE RÉFLEXION</h3></div></div>
+          <p>Quelles conditions vous semblent indispensables pour que le lien survive, se transmette et continue réellement après la rencontre ?</p>
+          <textarea data-field="r4_reflection" placeholder="Notre réflexion collective sur la durabilité du réseau…"></textarea>
+        </article>
+        <article class="relay-card"><div><span>🗣️</span><h3>Le message final de cette rotation</h3></div><textarea data-field="r4_relay" placeholder="Ce que vous voulez absolument conserver dans la synthèse finale…"></textarea></article>
+        <div class="nav-actions"><button class="btn ghost" data-go="3">← Retour</button><button class="btn primary" data-go="5">Construire la synthèse →</button></div>
+      </section>
+
+      <!-- SYNTHESIS -->
+      <section class="panel" data-panel="5">
+        <div class="section-heading">
+          <div><span class="kicker">Production attendue</span><h2>Notre proposition finale</h2></div>
+          <div class="phase-badge done">✓</div>
+        </div>
+        <p class="lead">Formulez ce que vous voulez réellement emporter de l'atelier et pouvoir activer après Nicosie.</p>
+
+        <div class="summary-grid">
+          <label>🤝 Notre dispositif de mise en relation<textarea data-field="final_device" placeholder="Comment fonctionne-t-il ? Qui est concerné ?"></textarea></label>
+          <label>🧩 Le fonctionnement du lien<textarea data-field="final_operation" placeholder="Qui joue quel rôle ? Comment le lien se maintient-il et se transmet-il ?"></textarea></label>
+          <label class="full accent">👣 La plus petite action concrète à initier dès la semaine prochaine<textarea data-field="final_next" placeholder="Une action simple, précise et réalisable…"></textarea></label>
+        </div>
+
+        <section class="drawing-section">
+          <div class="drawing-head"><div><span class="kicker">Schéma libre</span><h3>Représentez votre réseau ou le fonctionnement du dispositif</h3></div><div class="drawing-tools"><button id="penBtn" class="tool active">✏️ Dessiner</button><button id="eraserBtn" class="tool">🧽 Effacer</button><button id="clearCanvas" class="tool danger">🗑 Tout effacer</button></div></div>
+          <canvas id="networkCanvas" width="1100" height="430" aria-label="Zone de dessin du schéma du réseau"></canvas>
+        </section>
+
+        <section class="final-contributors">
+          <h3>👥 Tous les prénoms de celles et ceux qui ont participé</h3>
+          <div id="allContributors"></div>
+        </section>
+
+        <div class="export-box">
+          <div><span class="kicker">Votre production est prête</span><h3>Générer le carnet final de la table</h3><p>Le PDF reprend les 4 rotations, les prénoms du groupe, votre proposition finale et votre schéma.</p></div>
+          <div class="export-actions">
+            <button id="previewBtn" class="btn ghost">👁 Prévisualiser</button>
+            <button id="pdfBtn" class="btn primary">📄 Générer le PDF + l’enregistrer dans Drive</button>
+            <button id="backupBtn" class="btn secondary">💾 Sauvegarder le carnet</button>
+            <label class="btn secondary file-btn">📂 Restaurer<input id="restoreInput" type="file" accept="application/json" hidden></label>
+            <button id="driveSyncBtn" class="btn secondary">☁️ Envoyer une copie du carnet (JSON)</button>
+            <p id="driveSyncStatus" class="drive-sync-status"></p>
+          </div>
+        </div>
+        <div class="nav-actions"><button class="btn ghost" data-go="4">← Retour</button><button id="resetAll" class="btn danger-outline">Réinitialiser cette table</button></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="participantDialog" class="participant-dialog">
+    <form method="dialog" id="participantForm">
+      <div class="dialog-head"><div><span class="kicker">Nouvelle rotation</span><h2>Qui contribue à cette table ?</h2></div><button value="cancel" class="dialog-close" aria-label="Fermer">×</button></div>
+      <p>Les prénoms de la rotation précédente sont déjà repris. Retirez le prénom de la personne partie comme ambassadeur, puis ajoutez celui de la personne qui vient d'arriver.</p>
+      <div id="existingPeopleHint" class="existing-people-hint"></div>
+      <input type="hidden" id="participantRotation">
+      <label>Prénom<input id="participantName" required maxlength="40" placeholder="Ex. Sofia"></label>
+      <label>Établissement / ville<input id="participantSchool" required maxlength="80" placeholder="Ex. Athènes — LFHED"></label>
+      <div class="dialog-actions"><button value="cancel" class="btn ghost">Annuler</button><button id="participantSubmit" value="default" class="btn primary">Ajouter</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="previewDialog" class="preview-dialog">
+    <div class="dialog-head"><div><span class="kicker">Prévisualisation</span><h2>Production finale</h2></div><button id="closePreview" class="dialog-close">×</button></div>
+    <div id="previewContent" class="preview-content"></div>
+  </dialog>
+
+  <div id="rotationToast" class="rotation-toast" role="status" aria-live="polite">
+    <div class="toast-icon">🔄</div><div><strong>Rotation !</strong><span>Accueillez celles et ceux qui arrivent, puis ajoutez leurs prénoms.</span></div>
+  </div>
+</body>
+</html>

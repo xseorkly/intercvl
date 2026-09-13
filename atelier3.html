@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inter-CVL ZESE — Atelier 3 : Construire le Réseau</title>
+  <meta name="description" content="Atelier collaboratif de consolidation et de construction du réseau Inter-CVL ZESE à Nicosie.">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="drive-sync.js"></script>
+  <script defer src="atelier3.js"></script>
+</head>
+<body>
+  <div class="topbar"><a class="home-link" href="index.html">← Retour à l’accueil des ateliers</a><a class="source-link" href="supports/Atelier3.pdf" target="_blank">Voir le support PDF</a></div>
+  <header class="hero hero-three">
+    <div class="brand-row">
+      <img class="brand brand-zese" src="assets/logo-zese.png" alt="IRF Europe du Sud-Est — AEFE">
+      <div class="hero-title">
+        <span class="eyebrow">INTER-CVL • ZESE • NICOSIE</span>
+        <h1>Atelier 3 — Construire le Réseau</h1>
+        <p>Stabiliser les idées, construire le dispositif, lui donner une identité et passer à l’action.</p>
+      </div>
+      <img class="brand brand-aefe" src="assets/logo-aefe.png" alt="AEFE — Agence pour l'enseignement français à l'étranger">
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar" aria-label="Navigation de l'atelier">
+      <section class="card compact session-card">
+        <h2>Votre groupe</h2>
+        <label>Nom de la table / groupe
+          <input id="tableName" type="text" placeholder="Ex. Table 3 — Réseau 2030">
+        </label>
+        <div class="save-status" id="saveStatus">💾 Sauvegarde locale active</div>
+      </section>
+
+      <section class="card compact contributors-sidebar">
+        <div class="contributors-side-head"><h2>Votre équipe</h2><button id="addParticipant" class="btn secondary small">+ Ajouter un prénom</button></div>
+        <div id="peopleSidebar" class="people-list"></div>
+      </section>
+
+      <nav class="steps" id="stepsNav">
+        <button data-step="0" class="step active"><span>0</span>Accueil</button>
+        <button data-step="1" class="step"><span>1</span>Stabiliser</button>
+        <button data-step="2" class="step"><span>2</span>Structurer</button>
+        <button data-step="3" class="step"><span>3</span>Identité & action</button>
+        <button data-step="4" class="step"><span>✓</span>Restituer</button>
+      </nav>
+
+      <section class="card compact timer-card">
+        <div class="timer-top"><div><span class="small-label">Stabilisation</span><strong id="timerLabel">20 minutes</strong></div><div id="timerDisplay" class="timer-display">20:00</div></div>
+        <div class="timer-actions"><button id="timerStart" class="btn primary small">▶ Démarrer</button><button id="timerPause" class="btn ghost small">⏸</button><button id="timerReset" class="btn ghost small">↺</button></div>
+      </section>
+
+      <section class="card compact privacy-card"><strong>🔒 Vos données restent sous votre contrôle</strong><p>Vos notes sont sauvegardées sur cet appareil. Elles sont envoyées uniquement lorsque vous choisissez d’enregistrer le PDF ou une copie du carnet dans le Drive de l’équipe organisatrice.</p></section>
+    </aside>
+
+    <section class="workspace">
+      <section class="panel visible" data-panel="0">
+        <div class="intro-grid">
+          <div>
+            <span class="kicker">Atelier de consolidation • décision • projection</span>
+            <h2>Passer de toutes les idées à un réseau que vous pouvez vraiment lancer</h2>
+            <p class="lead">Cet atelier ne cherche plus à produire encore plus d'idées. Il sert à relire, repérer les convergences, sélectionner ce qui est clair et réalisable, puis assembler le meilleur des ateliers précédents en un dispositif commun.</p>
+            <div class="timeline atelier3-timeline">
+              <article><b>20 min</b><span>Stabiliser et prioriser les idées</span></article>
+              <article><b>Étape 2</b><span>Construire un dispositif structuré</span></article>
+              <article><b>Étape 3</b><span>Définir identité, engagement et plan d'action</span></article>
+              <article><b>Final</b><span>Schéma + mini plan d'action + pitch 2–3 min</span></article>
+            </div>
+            <div class="callout"><span class="callout-icon">🧠</span><div><strong>Principe d'intelligence collective</strong><p>Vous ne repartez pas de zéro : vous récupérez les productions des ateliers 1 et 2, vous les comparez, puis vous choisissez ensemble ce qui mérite de devenir la base du réseau.</p></div></div>
+          </div>
+
+        <section class="student-howto">
+          <div class="student-howto-head"><span class="howto-icon">🧩</span><div><span class="kicker">Les règles, étape par étape</span><h3>Ici, vous ne tournez plus : votre groupe reste ensemble jusqu'à la fin</h3><p>Après la circulation des idées des ateliers précédents, cet atelier sert à <strong>choisir, organiser et rendre réalisables</strong> les meilleures propositions. Vous gardez le même groupe et le même appareil pendant tout l'atelier.</p></div></div>
+          <div class="howto-steps">
+            <article><span>1</span><div><h4>Récupérez les productions précédentes</h4><p>Si les Ateliers 1 et 2 ont été faits sur cet appareil, utilisez le bouton de récupération. Sinon, importez leurs fichiers de sauvegarde JSON. Vous pouvez aussi ajouter manuellement une idée importante entendue ailleurs.</p></div></article>
+            <article><span>2</span><div><h4>20 minutes pour stabiliser</h4><p>Relisez d'abord toutes les idées sans filtrer. Repérez celles qui reviennent souvent, celles qui sont claires, celles qui sont réalisables, puis marquez les idées que vous voulez garder.</p></div></article>
+            <article><span>3</span><div><h4>Construisez un dispositif cohérent</h4><p>Donnez-lui un nom et un objectif. Décidez qui lance le réseau, comment on le rejoint, à quelle fréquence il fonctionne et comment il peut durer.</p></div></article>
+            <article><span>4</span><div><h4>Donnez-lui une identité</h4><p>Choisissez les valeurs communes et formulez le message du réseau. Dessinez ensuite un schéma qui montre les acteurs, les liens et ce qui circule entre les établissements.</p></div></article>
+            <article><span>5</span><div><h4>Passez au plan d'action</h4><p>Décidez de la première action, des actions suivantes, des établissements pilotes, des responsables, des échéances et de la manière de vérifier si cela fonctionne.</p></div></article>
+            <article><span>6</span><div><h4>Préparez votre restitution</h4><p>Votre groupe prépare un pitch de 2 à 3 minutes pour présenter le dispositif, convaincre les autres et expliquer comment le réseau peut réellement démarrer.</p></div></article>
+          </div>
+          <div class="howto-warning"><strong>À retenir :</strong> dans l'Atelier 3, <strong>personne ne change de groupe</strong>. Vous restez ensemble pour passer de nombreuses idées à une seule proposition structurée.</div>
+          <div class="howto-finish"><strong>🏁 À la fin :</strong> vous repartez avec un schéma global, un mini plan d'action, un pitch et le PDF complet de votre groupe.</div>
+        </section>
+          <div class="intro-card atelier3-intro-card">
+            <h3>Votre production finale</h3>
+            <p>Un dispositif cohérent, une identité commune, un schéma global, un mini plan d'action et un pitch convaincant de 2 à 3 minutes.</p>
+            <ul class="checklist"><li>🔎 Repérer les récurrences</li><li>⭐ Choisir les idées réalisables</li><li>🧩 Assembler le dispositif</li><li>🚀 S'engager sur les premières actions</li></ul>
+            <button class="btn primary wide" data-go="1">Commencer la stabilisation →</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" data-panel="1">
+        <div class="section-heading"><div><span class="kicker">Étape 1 • 20 minutes</span><h2>Stabiliser les idées</h2></div><div class="phase-badge">01</div></div>
+        <p class="lead">Relisez les productions, repérez ce qui revient, privilégiez les idées faciles à comprendre et celles qui peuvent réellement démarrer. Le but est de passer de beaucoup d'idées à une vision commune que vous pouvez vraiment mettre en œuvre.</p>
+
+        <section class="import-lab">
+          <div><span class="kicker">Récupérer les ateliers précédents</span><h3>Créer votre banque d'idées</h3><p>Si les ateliers 1 et 2 ont été réalisés sur cet appareil, récupérez-les automatiquement. Sinon, importez les fichiers de sauvegarde téléchargés par les autres tables.</p></div>
+          <div class="import-actions"><button id="importLocal" class="btn secondary">↙ Récupérer Atelier 1 + 2 de cet appareil</button><label class="btn ghost file-btn">📂 Importer des sauvegardes<input id="importBackups" type="file" accept="application/json" multiple hidden></label></div>
+          <div id="importStatus" class="import-status">Aucune production importée pour le moment.</div>
+        </section>
+
+        <section class="idea-bank-section">
+          <div class="idea-bank-head"><div><span class="kicker">Banque d'idées</span><h3>Relire → repérer → sélectionner</h3></div><div class="idea-add-manual"><input id="manualIdea" placeholder="Ajouter une idée entendue pendant les ateliers…"><button id="addManualIdea" class="btn primary small">+ Ajouter</button></div></div>
+          <div class="criteria-legend"><span>🔁 Revient souvent</span><span>💬 Claire</span><span>🚀 Réalisable</span><span>⭐ À garder</span></div>
+          <div id="ideaBank" class="idea-bank"></div>
+        </section>
+
+        <div class="stabilization-grid">
+          <article class="reflection-card"><div class="reflection-title"><span>🔎</span><div><span class="kicker">Signaux forts</span><h3>Ce qui revient le plus</h3></div></div><textarea data-field="stabilize_recurrences" placeholder="Quelles idées ont émergé plusieurs fois ? Qu'est-ce qui semble faire consensus ?"></textarea></article>
+          <article class="reflection-card"><div class="reflection-title"><span>⭐</span><div><span class="kicker">Décision collective</span><h3>Ce que nous gardons comme base du réseau</h3></div></div><textarea data-field="stabilize_core" placeholder="En quelques lignes : les idées que le groupe décide de conserver et pourquoi…"></textarea></article>
+        </div>
+        <div class="nav-actions"><button class="btn ghost" data-go="0">← Accueil</button><button class="btn primary" data-go="2">Construire le dispositif →</button></div>
+      </section>
+
+      <section class="panel" data-panel="2">
+        <div class="section-heading"><div><span class="kicker">Étape 2 • construire la base du réseau</span><h2>Définir un projet clair et structuré</h2></div><div class="phase-badge">02</div></div>
+        <p class="lead">Assemblez les idées retenues en un projet compréhensible : un nom, un objectif, une porte d'entrée, un rythme et des mécanismes pour durer.</p>
+        <div id="foundationIdeas" class="foundation-ideas"></div>
+
+        <div class="device-builder">
+          <label>🏷️ Nom du dispositif<input data-field="device_name" placeholder="Un nom simple et mémorable"></label>
+          <label>🎯 L'objectif en 1 phrase<input data-field="device_objective" placeholder="Notre réseau permet de…"></label>
+          <label>🚀 Qui initie ?<textarea data-field="device_initiator" placeholder="Qui lance le projet ? Un établissement, un groupe d'élèves, un autre acteur…"></textarea></label>
+          <label>🚪 Comment rejoindre ?<textarea data-field="device_join" placeholder="Quelle procédure simple pour intégrer le réseau ?"></textarea></label>
+          <label>🗓️ À quelle fréquence ?<textarea data-field="device_frequency" placeholder="Rythme des échanges, rencontres et productions…"></textarea></label>
+          <label>🔁 Comment durer ?<textarea data-field="device_sustain" placeholder="Relais, mémoire, rôles, documentation, transmission…"></textarea></label>
+        </div>
+
+        <section class="drawing-section">
+          <div class="drawing-head"><div><span class="kicker">Schéma global</span><h3>Représentez le fonctionnement du réseau</h3><p>Faites apparaître les acteurs, les liens, les flux, les moments de rencontre et ce qui circule entre les établissements.</p></div><div class="drawing-tools"><button id="penBtn3" class="tool active">✏️ Dessiner</button><button id="eraserBtn3" class="tool">🧽 Gomme</button><button id="clearCanvas3" class="tool danger">🗑 Effacer</button></div></div>
+          <canvas id="networkCanvas3" width="1200" height="600" aria-label="Zone de dessin du schéma du réseau"></canvas>
+        </section>
+        <article class="reflection-card"><div class="reflection-title"><span>🧠</span><div><span class="kicker">Test de cohérence</span><h3>Pourquoi ce projet est-il utile, réaliste et capable de rassembler ?</h3></div></div><textarea data-field="device_coherence" placeholder="Expliquez en quoi il répond à un besoin réel, peut être mis en œuvre avec les moyens disponibles et rassemble plusieurs établissements…"></textarea></article>
+        <div class="nav-actions"><button class="btn ghost" data-go="1">← Stabilisation</button><button class="btn primary" data-go="3">Identité & plan d'action →</button></div>
+      </section>
+
+      <section class="panel" data-panel="3">
+        <div class="section-heading"><div><span class="kicker">Étape 3 • identité & engagement</span><h2>Donner du sens et passer à l'action</h2></div><div class="phase-badge">03</div></div>
+        <p class="lead">Un réseau durable a besoin de valeurs partagées, d'un message clair et de premières actions visibles. Transformez maintenant le projet en engagement concret.</p>
+
+        <section class="identity-lab">
+          <div><span class="kicker">Valeurs communes</span><h3>Choisissez jusqu'à 4 valeurs qui doivent guider le réseau</h3></div>
+          <div class="value-chips" id="valueChips"><button data-value="Coopération">Coopération</button><button data-value="Solidarité">Solidarité</button><button data-value="Ouverture">Ouverture</button><button data-value="Engagement civique">Engagement civique</button><button data-value="Créativité">Créativité</button><button data-value="Inclusion">Inclusion</button><button data-value="Écoute">Écoute</button><button data-value="Responsabilité">Responsabilité</button><button data-value="Confiance">Confiance</button></div>
+          <label class="identity-message">💬 Message fondateur — « Ce réseau existe pour… »<textarea data-field="network_message" placeholder="Une phrase simple, mémorable et inspirante…"></textarea></label>
+        </section>
+
+        <div class="projection-grid">
+          <article><h3>01 — Première action à lancer</h3><p>Quelle action immédiate, concrète et réalisable donnera une impulsion visible ?</p><textarea data-field="action_first"></textarea></article>
+          <article><h3>02 — Actions suivantes</h3><p>Quelles initiatives complémentaires consolideront le réseau ?</p><textarea data-field="action_next"></textarea></article>
+          <article><h3>03 — Établissements pilotes</h3><p>Qui s'engage en premier à expérimenter et partager ses retours ?</p><textarea data-field="action_pilots"></textarea></article>
+          <article><h3>04 — Comment savoir si ça marche ?</h3><p>Quels signes concrets vous montreront que le réseau fonctionne vraiment ?</p><textarea data-field="action_metrics"></textarea></article>
+          <article class="full"><h3>05 — Votre engagement</h3><p>Quel engagement concret ou symbolique êtes-vous prêts à prendre pour faire vivre ce réseau ?</p><textarea data-field="action_students"></textarea></article>
+        </div>
+
+        <section class="action-plan-lab">
+          <div class="action-plan-head"><div><span class="kicker">Mini plan d'action</span><h3>Qui fait quoi, pour quand, et comment vérifier que c'est fait ?</h3></div><button id="prefillPlan" class="btn ghost small">Préremplir avec nos réponses</button></div>
+          <div class="plan-table-wrap"><table class="plan-table"><thead><tr><th>Étape</th><th>Responsable</th><th>Échéance</th><th>Comment vérifier ?</th><th></th></tr></thead><tbody id="planRows"></tbody></table></div>
+          <button id="addPlanRow" class="btn secondary small">+ Ajouter une étape</button>
+        </section>
+        <div class="nav-actions"><button class="btn ghost" data-go="2">← Dispositif</button><button class="btn primary" data-go="4">Préparer la restitution →</button></div>
+      </section>
+
+      <section class="panel" data-panel="4">
+        <div class="section-heading"><div><span class="kicker">Production finale</span><h2>Mettre en forme et convaincre</h2></div><div class="phase-badge done">✓</div></div>
+        <p class="lead">La restitution finale doit rendre votre dispositif facile à comprendre, à partager et capable de rassembler : un schéma global, un mini plan d'action et un pitch de 2 à 3 minutes.</p>
+
+        <section class="pitch-lab">
+          <div class="pitch-head"><div><span class="kicker">🎤 Pitch 2–3 minutes</span><h3>Construire un récit simple</h3><p>Présentez le besoin, votre dispositif, la façon dont il fonctionne, le premier engagement et l'invitation faite aux autres établissements.</p></div><button id="generatePitch" class="btn primary">✨ Générer une trame à partir de nos réponses</button></div>
+          <textarea id="pitchText" data-field="final_pitch" placeholder="Votre pitch apparaîtra ici. Vous pourrez le modifier librement…"></textarea>
+          <div class="pitch-cues"><span>1. Pourquoi ?</span><span>2. Quoi ?</span><span>3. Comment ?</span><span>4. Première action</span><span>5. Invitation</span></div>
+        </section>
+
+        <section class="final-contributors"><h3>👥 Votre équipe</h3><div id="allContributors3"></div></section>
+        <div class="export-box"><div><span class="kicker">Le réseau prend forme</span><h3>Générer la production finale du groupe</h3><p>Le PDF reprend les idées stabilisées, le dispositif, les valeurs, le schéma, le plan d'action et le pitch.</p></div><div class="export-actions"><button id="previewBtn3" class="btn ghost">👁 Prévisualiser</button><button id="pdfBtn3" class="btn primary">📄 Générer le PDF + l’enregistrer dans Drive</button><button id="backupBtn3" class="btn secondary">💾 Sauvegarder le carnet</button><label class="btn secondary file-btn">📂 Restaurer<input id="restoreInput3" type="file" accept="application/json" hidden></label><button id="driveSyncBtn3" class="btn secondary">☁️ Envoyer une copie du carnet (JSON)</button><p id="driveSyncStatus3" class="drive-sync-status"></p></div></div>
+        <div class="nav-actions"><button class="btn ghost" data-go="3">← Retour</button><a class="btn secondary" href="index.html">⌂ Retour aux ateliers</a><button id="resetAll3" class="btn danger-outline">Réinitialiser ce groupe</button></div>
+      </section>
+    </section>
+  </main>
+
+  <dialog id="participantDialog3" class="participant-dialog"><form method="dialog" id="participantForm3"><div class="dialog-head"><div><span class="kicker">Votre équipe</span><h2>Qui participe à cette construction ?</h2></div><button value="cancel" class="dialog-close" aria-label="Fermer">×</button></div><label>Prénom<input id="participantName3" required maxlength="40" placeholder="Ex. Sofia"></label><label>Établissement / ville<input id="participantSchool3" required maxlength="80" placeholder="Ex. Athènes — LFHED"></label><div class="dialog-actions"><button value="cancel" class="btn ghost">Annuler</button><button value="default" class="btn primary">Ajouter</button></div></form></dialog>
+  <dialog id="previewDialog3" class="preview-dialog"><div class="dialog-head"><div><span class="kicker">Prévisualisation</span><h2>Production finale — Atelier 3</h2></div><button id="closePreview3" class="dialog-close">×</button></div><div id="previewContent3" class="preview-content"></div></dialog>
+  <div id="rotationToast3" class="rotation-toast" role="status" aria-live="polite"><div class="toast-icon">⏱️</div><div><strong>Stabilisation</strong><span>Continuez à sélectionner l'essentiel.</span></div></div>
+</body>
+</html>

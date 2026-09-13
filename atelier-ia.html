@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Atelier IA — L'IA peut tout faire… ou presque</title>
+  <meta name="description" content="Laboratoire interactif d'intelligence artificielle générative pour l'Inter-CVL ZESE.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="ia-page ia-harmonized">
+<header class="hero ia-hero ia-hero-harmonized">
+  <div class="brand-row">
+    <img src="assets/logo-zese.png" alt="IRF Europe du Sud-Est — AEFE" class="brand brand-zese">
+    <div class="hero-title">
+      <span class="eyebrow">INTER-CVL • ZESE • NICOSIE</span>
+      <h1>L'IA peut tout faire… ou presque</h1>
+      <p><strong>LAB IA</strong> • Tester • Observer • Identifier • Prendre du recul</p>
+    </div>
+    <img src="assets/logo-aefe.png" alt="AEFE" class="brand brand-aefe">
+  </div>
+</header>
+
+<div class="ia-topbar topbar ia-topbar-harmonized">
+  <a class="home-link" href="index.html">← Retour à l'accueil des ateliers</a>
+  <a class="source-link" href="supports/Atelier-IA.pdf" target="_blank">📄 Support PDF de l'atelier</a>
+  <span id="saveStatus" class="save-status">💾 Sauvegarde locale active</span>
+</div>
+
+<main class="layout ia-layout">
+  <aside class="sidebar">
+    <section class="card compact session-card">
+      <h2>Votre groupe</h2>
+      <label>Nom du groupe / table
+        <input id="groupName" placeholder="Ex. Groupe 4 — Nicosie">
+      </label>
+    </section>
+
+    <nav class="card compact steps ia-steps" aria-label="Parcours">
+      <button class="step active" data-step="0"><span>0</span> Équipe & règles</button>
+      <button class="step" data-step="1"><span>1</span> Hymne IA</button>
+      <button class="step" data-step="2"><span>2</span> Vidéo promo</button>
+      <button class="step" data-step="3"><span>3</span> Simulation IA</button>
+      <button class="step" data-step="4"><span>4</span> Travail scolaire</button>
+      <button class="step" data-step="5"><span>5</span> Débrief & bilan</button>
+    </nav>
+
+    <section class="card compact timer-card">
+      <div class="timer-top"><div><span class="small-label" id="timerLabel">Prêt</span><div class="timer-display" id="timerDisplay">10:00</div></div><span id="timerPreset" class="timer-preset">10 min</span></div>
+      <div class="timer-actions"><button class="btn ghost small" id="timerStart">▶</button><button class="btn ghost small" id="timerPause">Ⅱ</button><button class="btn ghost small" id="timerReset">↺</button></div>
+    </section>
+
+    <section class="card compact privacy-card">
+      <h2>🔒 Vos données restent sous votre contrôle</h2>
+      <p>Vos prénoms, consignes et réflexions sont sauvegardés sur cet appareil. Ils sont envoyés uniquement lorsque vous choisissez d’enregistrer le PDF ou une copie du carnet dans le Drive de l’équipe organisatrice.</p>
+    </section>
+  </aside>
+
+  <section class="workspace">
+    <section class="panel visible" data-panel="0">
+      <span class="kicker">Avant de commencer</span>
+      <h2>Une équipe, quatre regards sur l'IA</h2>
+      <p class="lead">Votre mission n'est pas seulement de produire avec l'IA : vous devez garder la trace de ce que vous lui déléguez, de ce que vous décidez vous-mêmes et de ce qui vous fait douter.</p>
+
+      <div class="ia-role-grid" id="roleGrid"></div>
+      <div class="ia-role-actions"><button class="btn secondary" id="autoRoles">🎲 Répartir les rôles</button><button class="btn ghost" id="clearTeam">Effacer l'équipe</button></div>
+
+      <div class="callout ia-callout"><div class="callout-icon">🧭</div><div><strong>Règle du laboratoire</strong><p>Pour chaque production : conservez votre consigne (prompt), notez les modifications que vous avez faites et posez-vous la question « qu'avons-nous réellement compris ou décidé ? »</p></div></div>
+
+
+      <section class="student-howto ia-howto">
+        <div class="student-howto-head"><span class="howto-icon">🤖</span><div><span class="kicker">Les règles, étape par étape</span><h3>Comment vous allez travailler dans le LAB IA</h3><p>Vous formez un groupe de <strong>3 à 4 élèves</strong>. Vous restez ensemble pendant tout le LAB : <strong>il n'y a pas de rotation entre les groupes</strong>. Chacun prend un rôle pour que tout le monde participe.</p></div></div>
+        <div class="howto-steps">
+          <article><span>1</span><div><h4>Répartissez les rôles</h4><p><strong>Pilote IA :</strong> manipule les outils. <strong>Rédacteur :</strong> note les consignes et résultats. <strong>Observateur critique :</strong> cherche erreurs, biais et limites. <strong>Porte-parole :</strong> prépare ce que le groupe retiendra.</p></div></article>
+          <article><span>2</span><div><h4>Mission 1 — Hymne IA</h4><p>Vous avez au maximum 10 minutes pour tester la création musicale. Conservez votre consigne exacte, le résultat obtenu, le temps utilisé et les modifications faites par votre groupe.</p></div></article>
+          <article><span>3</span><div><h4>Mission 2 — Vidéo promotionnelle</h4><p>Construisez une vidéo courte : visuels, slogan, voix off et ambiance. Gardez la trace des outils utilisés et de vos décisions humaines.</p></div></article>
+          <article><span>4</span><div><h4>Mission 3 — Simulation IA</h4><p>Avant de commencer, validez le feu vert éthique. Utilisez un personnage fictif, historique ou une personne ayant explicitement consenti. Le contenu généré doit être clairement signalé.</p></div></article>
+          <article><span>5</span><div><h4>Phase critique — Travail scolaire</h4><p>Testez ce que l'IA peut produire pour un travail scolaire, puis comparez ce résultat avec ce que vous devez réellement comprendre, vérifier et savoir expliquer sans l'IA.</p></div></article>
+          <article><span>6</span><div><h4>Débrief final</h4><p>Discutez de ce que l'expérience vous a appris : produire vite signifie-t-il comprendre ? Que doit encore mesurer l'évaluation ? Faut-il interdire ou apprendre à intégrer l'IA ?</p></div></article>
+        </div>
+        <div class="howto-warning"><strong>Règle du LAB :</strong> à chaque mission, gardez la <strong>consigne (prompt)</strong>, le résultat, vos modifications et votre analyse critique. Vous devez être capables d'expliquer ce que l'IA a fait et ce que <strong>vous</strong> avez réellement décidé ou compris.</div>
+        <div class="howto-finish"><strong>🏁 À la fin :</strong> formulez 3 forces, 3 risques, 1 question éthique et 1 compétence humaine irremplaçable, puis générez votre carnet PDF.</div>
+      </section>
+      <div class="ia-roadmap">
+        <article><b>🎵 Mission 1</b><span>Créer un hymne</span></article>
+        <article><b>🎬 Mission 2</b><span>Concevoir une vidéo promo</span></article>
+        <article><b>🎭 Mission 3</b><span>Tester un contenu créé par IA</span></article>
+        <article><b>📚 Phase critique</b><span>Mesurer ce que l'IA peut produire à votre place</span></article>
+      </div>
+
+      <section class="toolbox-section better-tools">
+        <div class="toolbox-head">
+          <div>
+            <span class="kicker">Boîte à outils • vérifiée en septembre 2026</span>
+            <h3>🧰 Quels outils utiliser, pour quoi faire ?</h3>
+          </div>
+          <p>Choisissez simplement l'outil qui correspond à votre mission. Pour chaque usage, vous trouverez un outil principal et une alternative.</p>
+        </div>
+
+        <div class="tool-usage-grid">
+          <article class="usage-card">
+            <div class="usage-head"><span class="usage-step">1</span><div><h4>Écrire, comparer, trouver des idées</h4><p>Idéal pour écrire des consignes (prompts), construire des plans et comparer les réponses.</p></div></div>
+            <div class="tool-brand-row">
+              <a class="brand-tool" href="https://chatgpt.com/" target="_blank" rel="noopener"><img src="assets/tools/chatgpt.svg" alt="ChatGPT"><div><b>ChatGPT Free</b><small>texte • idées • plans • comparaison</small></div></a>
+              <a class="brand-tool" href="https://gemini.google.com/" target="_blank" rel="noopener"><img src="assets/tools/gemini.svg" alt="Gemini"><div><b>Gemini</b><small>texte • idées • reformulation • comparaison</small></div></a>
+            </div>
+          </article>
+
+          <article class="usage-card">
+            <div class="usage-head"><span class="usage-step">2</span><div><h4>Créer des images</h4><p>Pour illustrer la vidéo ou trouver une ambiance visuelle rapidement.</p></div></div>
+            <div class="tool-brand-row">
+              <a class="brand-tool" href="https://designer.microsoft.com/" target="_blank" rel="noopener"><img src="assets/tools/ms-designer.svg" alt="Microsoft Designer"><div><b>Microsoft Designer</b><small>simple • rapide • visuels à partir d'une consigne</small></div></a>
+              <a class="brand-tool" href="https://firefly.adobe.com/" target="_blank" rel="noopener"><img src="assets/tools/firefly.svg" alt="Adobe Firefly"><div><b>Adobe Firefly</b><small>images • effets • variations visuelles</small></div></a>
+            </div>
+          </article>
+
+          <article class="usage-card">
+            <div class="usage-head"><span class="usage-step">3</span><div><h4>Monter une vidéo ou une présentation</h4><p>Très pratique pour assembler les visuels, ajouter voix off et slogan.</p></div></div>
+            <div class="tool-brand-row">
+              <a class="brand-tool" href="https://www.canva.com/canva-ai/" target="_blank" rel="noopener"><img src="assets/tools/canva.svg" alt="Canva AI"><div><b>Canva AI</b><small>design • montage • Canva Education possible</small></div></a>
+              <a class="brand-tool" href="https://www.adobe.com/express/" target="_blank" rel="noopener"><img src="assets/tools/adobe-express.svg" alt="Adobe Express"><div><b>Adobe Express</b><small>montage • vidéo • avatar animé</small></div></a>
+            </div>
+          </article>
+
+          <article class="usage-card">
+            <div class="usage-head"><span class="usage-step">4</span><div><h4>Créer du son ou une simulation</h4><p>Pour l'hymne et pour comprendre les contenus créés par IA sans prendre de risques.</p></div></div>
+            <div class="tool-brand-row">
+              <a class="brand-tool" href="https://suno.com/" target="_blank" rel="noopener"><img src="assets/tools/suno.svg" alt="Suno"><div><b>Suno</b><small>musique • chanson • refrain • ambiance</small></div></a>
+              <a class="brand-tool" href="https://www.adobe.com/express/feature/video/animation/audio" target="_blank" rel="noopener"><img src="assets/tools/animate.svg" alt="Animate Characters"><div><b>Animate Characters</b><small>avatar animé • audio → animation</small></div></a>
+            </div>
+          </article>
+        </div>
+
+        <div class="tool-choice-note">
+          <div class="choice-box"><strong>✅ Choix conseillé pour aller vite</strong><span>Texte : ChatGPT ou Gemini • Images : Designer ou Firefly • Montage : Canva ou Adobe Express • Musique : Suno • Simulation : Animate Characters</span></div>
+          <div class="age-note"><strong>🔐 Avant d'ouvrir un outil :</strong> utilisez uniquement les comptes et services autorisés pour cet atelier. Si un site vous demande un âge minimum, une autorisation ou la création d'un compte non prévu, n'allez pas plus loin et choisissez l'alternative proposée.</div>
+        </div>
+      </section>
+      <div class="nav-actions"><span></span><button class="btn primary" data-go="1">Commencer le LAB IA →</button></div>
+    </section>
+
+    <section class="panel" data-panel="1">
+      <div class="section-heading"><div><span class="kicker">Mission 1 • 10 min</span><h2>🎵 Créer l'hymne de l'Inter-CVL</h2></div><div class="phase-badge">01</div></div>
+      <div class="constraint-strip"><span>Coopération</span><span>Jeunesse</span><span>Europe</span><span>Leadership</span><span>Refrain mémorable</span><span>1 à 2 min</span></div>
+
+      <section class="mission-tools stack-tools tool-showcase">
+        <div class="mission-tools-head">
+          <div><span class="kicker">Choix recommandé</span><h3>🎵 Pour l'hymne : un outil principal, une aide possible</h3><p>Ne multipliez pas les plateformes : utilisez <strong>Suno</strong> pour générer la musique, et seulement si besoin un assistant texte pour améliorer les paroles.</p></div>
+        </div>
+        <div class="mission-tool-grid two">
+          <article class="mission-tool-card highlight">
+            <img src="assets/tools/suno.svg" alt="Suno" class="mission-tool-logo">
+            <div><h4>Suno</h4><p>Le plus simple pour créer un hymne test en quelques minutes.</p><ul><li>1 à 2 minutes</li><li>refrain mémorable</li><li>lien de partage suffisant</li></ul></div>
+            <a class="btn secondary" href="https://suno.com/" target="_blank" rel="noopener">Ouvrir Suno ↗</a>
+          </article>
+          <article class="mission-tool-card">
+            <img src="assets/tools/chatgpt.svg" alt="ChatGPT" class="mission-tool-logo small-brand">
+            <img src="assets/tools/gemini.svg" alt="Gemini" class="mission-tool-logo small-brand">
+            <div><h4>Aide aux paroles</h4><p>Utilisez ChatGPT ou Gemini seulement pour trouver des idées de paroles, une structure ou un refrain.</p><ul><li>écrire une consigne pour une chanson</li><li>réécrire un couplet</li><li>trouver un slogan chantable</li></ul></div>
+          </article>
+        </div>
+        <small>⚠️ Suno : 13+ minimum, avec consentement parental pour les moins de 18 ans et respect de l'âge de consentement numérique du pays.</small>
+      </section>
+      <div class="ia-two-col">
+        <article class="lab-card"><h3>🧪 Trace de l'expérimentation</h3>
+          <label>Outil utilisé<input data-field="m1_tool" placeholder="Suno (conseillé), autre outil autorisé…"></label>
+          <label>Consigne exacte envoyée à l'IA (prompt)<textarea data-field="m1_prompt" placeholder="Copiez ici exactement ce que vous avez demandé à l'IA."></textarea></label>
+          <label>Lien ou nom du fichier produit<input data-field="m1_output" placeholder="Lien, nom du fichier audio…"></label>
+          <label>Modifications humaines<textarea data-field="m1_human_changes" placeholder="Paroles réécrites, structure, style, sélection entre plusieurs versions…"></textarea></label>
+        </article>
+        <article class="lab-card"><h3>🔎 Débrief immédiat</h3>
+          <label>Temps réellement utilisé<input data-field="m1_time" placeholder="Ex. 8 min"></label>
+          <label>Quelle part est vraiment de vous ?<textarea data-field="m1_ours" placeholder="Ce que vous avez imaginé, choisi, rejeté ou réécrit."></textarea></label>
+          <label>Qui est l'auteur selon vous ? Pourquoi ?<textarea data-field="m1_author"></textarea></label>
+          <label>Auriez-vous pu le faire sans IA ?<textarea data-field="m1_without"></textarea></label>
+        </article>
+      </div>
+      <div class="delegation-card"><div><h3>⚖️ Qui a fait quoi ?</h3><p>Estimez la part du résultat produite ou décidée par l'IA, puis la part réellement décidée par votre groupe.</p></div><div class="delegation-control"><input type="range" min="0" max="100" value="50" data-range="m1_ai"><strong><span data-range-out="m1_ai">50</span>% IA</strong><small><span data-human-out="m1_ai">50</span>% humain</small></div></div>
+      <label class="reflection-block"><strong>🧠 Ce que cette mission nous apprend sur l'IA créative</strong><textarea data-field="m1_reflection"></textarea></label>
+      <div class="nav-actions"><button class="btn ghost" data-go="0">← Équipe</button><button class="btn primary" data-go="2">Mission vidéo →</button></div>
+    </section>
+
+    <section class="panel" data-panel="2">
+      <div class="section-heading"><div><span class="kicker">Mission 2 • 10 min</span><h2>🎬 Concevoir une vidéo promotionnelle</h2></div><div class="phase-badge">02</div></div>
+      <p class="lead">Objectif : imaginer une vidéo de 30 secondes avec images IA, voix off, slogan et ambiance musicale. Le site sert de storyboard et de carnet de création.</p>
+
+      <section class="mission-tools stack-tools tool-showcase">
+        <div class="mission-tools-head"><div><span class="kicker">Parcours recommandé</span><h3>🎬 Une méthode simple en 3 étapes</h3><p>Ne cherchez pas un générateur vidéo miracle : pour 30 secondes, le plus efficace est <strong>images → montage → voix off</strong>.</p></div></div>
+        <div class="workflow-strip">
+          <div class="workflow-step"><span>1</span><b>Créer 3 ou 4 visuels</b><small>Designer ou Firefly</small></div>
+          <div class="workflow-step"><span>2</span><b>Monter la séquence</b><small>Canva AI ou Adobe Express</small></div>
+          <div class="workflow-step"><span>3</span><b>Ajouter slogan + voix</b><small>dans le même outil</small></div>
+        </div>
+        <div class="mission-tool-grid four">
+          <article class="mission-tool-card mini"><img src="assets/tools/ms-designer.svg" alt="Microsoft Designer" class="mission-tool-logo"><div><h4>Microsoft Designer</h4><p>Très pratique pour générer rapidement des visuels.</p></div><a class="btn ghost" href="https://designer.microsoft.com/" target="_blank" rel="noopener">Ouvrir</a></article>
+          <article class="mission-tool-card mini"><img src="assets/tools/firefly.svg" alt="Adobe Firefly" class="mission-tool-logo"><div><h4>Adobe Firefly</h4><p>Idéal pour varier les styles et générer des images.</p></div><a class="btn ghost" href="https://firefly.adobe.com/" target="_blank" rel="noopener">Ouvrir</a></article>
+          <article class="mission-tool-card mini"><img src="assets/tools/canva.svg" alt="Canva AI" class="mission-tool-logo"><div><h4>Canva AI</h4><p>Très simple pour l'assemblage et le texte.</p></div><a class="btn ghost" href="https://www.canva.com/canva-ai/" target="_blank" rel="noopener">Ouvrir</a></article>
+          <article class="mission-tool-card mini"><img src="assets/tools/adobe-express.svg" alt="Adobe Express" class="mission-tool-logo"><div><h4>Adobe Express</h4><p>Bonne alternative pour monter, animer et enregistrer une voix.</p></div><a class="btn ghost" href="https://www.adobe.com/express/" target="_blank" rel="noopener">Ouvrir</a></article>
+        </div>
+        <small>Conseil atelier : répartissez-vous les tâches — une personne génère les images, une autre prépare la voix off, une autre assemble.</small>
+      </section>
+      <div class="storyboard" id="storyboard"></div>
+      <div class="ia-two-col">
+        <article class="lab-card"><h3>🎙️ Identité de la vidéo</h3><label>Slogan<input data-field="m2_slogan"></label><label>Texte de voix off<textarea data-field="m2_voice"></textarea></label><label>Ambiance musicale<input data-field="m2_music" placeholder="Énergique, électro, orchestral…"></label></article>
+        <article class="lab-card"><h3>🧪 Outils & décisions</h3><label>Outil(s) utilisé(s)<input data-field="m2_tools" placeholder="Designer / Firefly + Canva ou Adobe Express…"></label><label>Principales consignes envoyées à l'IA (prompts)<textarea data-field="m2_prompts"></textarea></label><label>Modifications humaines<textarea data-field="m2_human_changes"></textarea></label><label>Lien ou nom du fichier<input data-field="m2_output"></label></article>
+      </div>
+      <div class="delegation-card"><div><h3>⚖️ Qui a fait quoi ?</h3><p>Quelle part de cette vidéo vient des outils IA, et quelle part vient de vos choix ?</p></div><div class="delegation-control"><input type="range" min="0" max="100" value="50" data-range="m2_ai"><strong><span data-range-out="m2_ai">50</span>% IA</strong><small><span data-human-out="m2_ai">50</span>% humain</small></div></div>
+      <label class="reflection-block"><strong>🧠 Ce que cette mission nous apprend</strong><textarea data-field="m2_reflection"></textarea></label>
+      <div class="nav-actions"><button class="btn ghost" data-go="1">← Hymne</button><button class="btn primary" data-go="3">Simulation IA →</button></div>
+    </section>
+
+    <section class="panel" data-panel="3">
+      <div class="section-heading"><div><span class="kicker">Mission 3 • 10 min</span><h2>🎭 Simulation IA & risques du deepfake</h2></div><div class="phase-badge warning">03</div></div>
+      <div class="ethics-banner"><strong>⚠️ Mission sensible</strong><span>On expérimente pour comprendre la manipulation, pas pour tromper. Utilisez un personnage fictif, un personnage historique ou une personne ayant explicitement consenti, et signalez clairement que le contenu est généré par IA.</span></div>
+
+      <section class="mission-tools stack-tools tool-showcase">
+        <div class="mission-tools-head"><div><span class="kicker">Alternative sûre et gratuite</span><h3>🎭 Pour la simulation : un seul outil, un cadre clair</h3><p>Le plus simple est d'utiliser <strong>Adobe Express Animate Characters</strong> : vous comprenez le principe d'un contenu créé par IA sans cloner le visage ou la voix d'une personne réelle.</p></div></div>
+        <div class="mission-tool-grid two">
+          <article class="mission-tool-card highlight">
+            <img src="assets/tools/animate.svg" alt="Animate Characters" class="mission-tool-logo">
+            <div><h4>Animate Characters</h4><p>Choisissez un personnage fictif, enregistrez ou importez un audio, puis observez comment les lèvres du personnage se synchronisent avec la voix.</p><ul><li>simple à utiliser en groupe</li><li>pas de clonage réel nécessaire</li><li>adapté à cette mission</li></ul></div>
+            <a class="btn secondary" href="https://www.adobe.com/express/feature/video/animation/audio" target="_blank" rel="noopener">Tester ↗</a>
+          </article>
+          <article class="mission-tool-card caution">
+            <div><h4>⚠️ Pourquoi HeyGen n'est pas proposé ici</h4><p>HeyGen demande actuellement d'avoir 18 ans ou plus. Pour cette mission, utilisez plutôt <strong>Animate Characters</strong> : vous pourrez tester le principe d'une animation créée par IA sans utiliser un service réservé aux adultes.</p><ul><li>outil adapté à votre atelier</li><li>pas de clonage d'une personne réelle</li><li>objectif : comprendre, tester et analyser</li></ul></div>
+          </article>
+        </div>
+      </section>
+      <section class="ethics-gate">
+        <h3>🛡️ Feu vert éthique obligatoire</h3><p>Validez les 4 conditions avant de préparer votre simulation.</p>
+        <label><input type="checkbox" data-check="consent"> Personnage fictif/historique, ou consentement explicite de la personne.</label>
+        <label><input type="checkbox" data-check="harm"> Aucun contenu humiliant, diffamatoire, haineux ou destiné à tromper.</label>
+        <label><input type="checkbox" data-check="label"> La mention « Généré par IA / Simulation » sera visible.</label>
+        <label><input type="checkbox" data-check="education"> Usage strictement pédagogique dans le cadre de l'atelier.</label>
+        <div id="ethicsStatus" class="ethics-status locked">🔒 Mission verrouillée</div>
+      </section>
+      <div id="simulationLab" class="simulation-lab locked-area">
+        <div class="ia-two-col">
+          <article class="lab-card"><h3>🎬 Préparer la simulation</h3><label>Personnage / avatar<input data-field="m3_person"></label><label>Message de 20 à 40 secondes<textarea data-field="m3_message"></textarea></label><label>Consigne / instructions exactes envoyées à l'outil<textarea data-field="m3_prompt"></textarea></label><label>Outil utilisé<input data-field="m3_tool" placeholder="Adobe Express Animate Characters (conseillé)"></label><label>Lien / nom du fichier<input data-field="m3_output"></label></article>
+          <article class="lab-card"><h3>🔍 Débrief immédiat obligatoire</h3><label>Manipulation possible ?<textarea data-field="m3_manipulation" placeholder="Peut-on faire dire n'importe quoi ? Quelles limites avez-vous observées ?"></textarea></label><label>Comment vérifier ?<textarea data-field="m3_verify" placeholder="Indices, sources, contexte, métadonnées, recherche inversée…"></textarea></label><label>Responsabilité<textarea data-field="m3_responsibility" placeholder="Qui porte la responsabilité si ce contenu cause un préjudice ?"></textarea></label></article>
+        </div>
+        <div class="delegation-card"><div><h3>⚖️ Qui a fait quoi ?</h3><p>Quelle part de la production finale vient de l'IA, et quelle part vient de vos décisions ?</p></div><div class="delegation-control"><input type="range" min="0" max="100" value="50" data-range="m3_ai"><strong><span data-range-out="m3_ai">50</span>% IA</strong><small><span data-human-out="m3_ai">50</span>% humain</small></div></div>
+      </div>
+      <label class="reflection-block"><strong>🧠 Après cette simulation, qu'est-ce qui vous inquiète ou vous surprend le plus ?</strong><textarea data-field="m3_reflection"></textarea></label>
+      <div class="nav-actions"><button class="btn ghost" data-go="2">← Vidéo</button><button class="btn primary" data-go="4">Expérimentation scolaire →</button></div>
+    </section>
+
+    <section class="panel" data-panel="4">
+      <div class="section-heading"><div><span class="kicker">Phase 2 • Expérimentation critique</span><h2>📚 « Tricher en 15 minutes ? »</h2></div><div class="phase-badge danger">!</div></div>
+      <div class="ethics-banner neutral"><strong>Cadre</strong><span>Il ne s'agit pas d'encourager la triche : vous mesurez ce que l'IA peut produire comme travail scolaire et ce que cela change pour l'apprentissage et l'évaluation.</span></div>
+
+      <section class="mission-tools stack-tools tool-showcase">
+        <div class="mission-tools-head"><div><span class="kicker">Outils texte simples</span><h3>💬 Deux assistants, même consigne</h3><p>Le plus instructif est souvent d'envoyer la <strong>même consigne</strong> dans deux outils, puis de comparer la qualité des plans, des exemples et des erreurs.</p></div></div>
+        <div class="mission-tool-grid two">
+          <article class="mission-tool-card mini"><img src="assets/tools/chatgpt.svg" alt="ChatGPT" class="mission-tool-logo"><div><h4>ChatGPT Free</h4><p>Utile pour générer un plan, une introduction ou un développement rapide.</p></div><a class="btn ghost" href="https://chatgpt.com/" target="_blank" rel="noopener">Ouvrir</a></article>
+          <article class="mission-tool-card mini"><img src="assets/tools/gemini.svg" alt="Gemini" class="mission-tool-logo"><div><h4>Gemini</h4><p>Utile pour comparer la structure, le ton et les exemples proposés.</p></div><a class="btn ghost" href="https://gemini.google.com/" target="_blank" rel="noopener">Ouvrir</a></article>
+        </div>
+        <small>Notez les différences : meilleur plan ? exemples précis ? informations inventées (« hallucinations ») ? style plus convaincant ?</small>
+      </section>
+      <div class="school-tabs"><button class="active" data-school-tab="philo">Défi 1 — Philosophie</button><button data-school-tab="hggsp">Défi 2 — HGGSP</button></div>
+
+      <section class="school-lab active" data-school-panel="philo">
+        <h3>Défi philosophie — 15 min</h3>
+        <label>Sujet<select data-field="p_subject"><option>La liberté est-elle une illusion ?</option><option>La valeur de l'art réside-t-elle dans son inutilité ?</option></select></label>
+        <div class="school-columns"><article><h4>🤖 Ce que l'IA produit</h4><label>Consigne envoyée à l'IA (prompt)<textarea data-field="p_prompt"></textarea></label><label>Résultat / plan obtenu<textarea data-field="p_result"></textarea></label><label>Temps avec l'IA<input data-field="p_ai_time" placeholder="Ex. 6 min"></label></article><article><h4>🧠 Ce qu'il faudrait réellement maîtriser</h4><label>Temps estimé sans IA<input data-field="p_normal_time" placeholder="Ex. 2 h"></label><label>Erreurs, approximations ou exemples fragiles<textarea data-field="p_errors"></textarea></label><label>Modifications humaines nécessaires<textarea data-field="p_changes"></textarea></label><label>Ce que nous serions incapables d'expliquer à l'oral<textarea data-field="p_unknown"></textarea></label></article></div>
+      </section>
+
+      <section class="school-lab" data-school-panel="hggsp">
+        <h3>Défi HGGSP — 10 min</h3>
+        <p class="muted">Traitez un sujet type bac : plan structuré, exemples précis et datés, réponse argumentée.</p>
+        <div class="school-columns"><article><h4>🤖 Production IA</h4><label>Sujet / consigne<textarea data-field="h_subject"></textarea></label><label>Consigne exacte envoyée à l'IA (prompt)<textarea data-field="h_prompt"></textarea></label><label>Plan / réponse obtenue<textarea data-field="h_result"></textarea></label></article><article><h4>🧠 Contrôle humain</h4><label>Exemples à vérifier<textarea data-field="h_verify"></textarea></label><label>Modifications nécessaires pour rendre le texte crédible<textarea data-field="h_changes"></textarea></label><label>Ce que le texte ne prouve pas que nous savons faire<textarea data-field="h_unknown"></textarea></label></article></div>
+      </section>
+
+      <section class="oral-surprise">
+        <div><span class="kicker">Test de compréhension</span><h3>🎤 Oral surprise</h3><p>Un texte produit n'est pas forcément un savoir acquis. Tirez une question et répondez sans demander à l'IA.</p></div>
+        <button class="btn secondary" id="drawOral">🎲 Tirer une question</button>
+        <blockquote id="oralQuestion">Cliquez pour tirer une question.</blockquote>
+        <label>Notre réponse / ce que cela révèle<textarea data-field="oral_answer"></textarea></label>
+      </section>
+      <div class="nav-actions"><button class="btn ghost" data-go="3">← Simulation</button><button class="btn primary" data-go="5">Débrief final →</button></div>
+    </section>
+
+    <section class="panel" data-panel="5">
+      <div class="section-heading"><div><span class="kicker">Débrief final • 15 min</span><h2>🧭 L'école face à l'IA</h2></div><div class="phase-badge done">✓</div></div>
+      <div class="debate-grid">
+        <article class="debate-card"><h3>⚡ Produire vite = comprendre ?</h3><input type="range" min="1" max="5" value="3" data-range="d_speed"><div class="scale-labels"><span>Pas du tout</span><strong data-range-out="d_speed">3</strong><span>Oui</span></div><textarea data-field="d_speed_reason" placeholder="Justifiez votre position."></textarea></article>
+        <article class="debate-card"><h3>📝 L'évaluation scolaire en question</h3><input type="range" min="1" max="5" value="3" data-range="d_eval"><div class="scale-labels"><span>Peu remise en cause</span><strong data-range-out="d_eval">3</strong><span>Très remise en cause</span></div><textarea data-field="d_eval_reason"></textarea></article>
+        <article class="debate-card"><h3>🚦 Interdire ou intégrer ?</h3><input type="range" min="1" max="5" value="3" data-range="d_integrate"><div class="scale-labels"><span>Interdire</span><strong data-range-out="d_integrate">3</strong><span>Intégrer</span></div><textarea data-field="d_integrate_reason"></textarea></article>
+      </div>
+
+      <section class="final-balance">
+        <h3>📌 Bilan collectif</h3><div class="final-grid">
+          <article><h4>💪 3 forces majeures</h4><input data-field="force1" placeholder="1."><input data-field="force2" placeholder="2."><input data-field="force3" placeholder="3."></article>
+          <article><h4>⚠️ 3 risques majeurs</h4><input data-field="risk1" placeholder="1."><input data-field="risk2" placeholder="2."><input data-field="risk3" placeholder="3."></article>
+          <article><h4>🤔 1 question éthique</h4><textarea data-field="ethical_question"></textarea></article>
+          <article><h4>🧠 1 compétence humaine irremplaçable</h4><textarea data-field="human_skill"></textarea></article>
+        </div>
+        <label class="manifesto-ia"><strong>Notre règle d'usage</strong><span>« Nous voulons utiliser l'IA pour… mais jamais pour… »</span><textarea data-field="final_rule" placeholder="Nous voulons utiliser l'IA pour…, mais jamais pour…"></textarea></label>
+      </section>
+
+      <section class="export-box"><div><span class="kicker">Carnet critique</span><h3>Votre synthèse est prête</h3><p>Prévisualisez votre travail, téléchargez une sauvegarde du carnet ou générez le PDF final de votre groupe.</p></div><div class="export-actions"><button class="btn ghost" id="previewBtn">👁 Prévisualiser</button><button class="btn primary" id="pdfBtn">📄 Générer le PDF + l’enregistrer dans Drive</button><button class="btn ghost" id="backupBtn">💾 Sauvegarder le carnet</button><label class="btn ghost file-btn">📂 Restaurer<input type="file" id="restoreInput" accept="application/json" hidden></label><button class="btn ghost" id="driveSyncBtn">☁️ Envoyer une copie du carnet (JSON)</button><button class="btn danger-outline" id="resetAll">Tout effacer</button><p id="driveSyncStatus" class="drive-sync-status"></p></div></section>
+      <section class="next-mission-card"><div><span class="kicker">La suite</span><h3>⚖️ Maintenant, construisez votre Charte IA</h3><p>Vous avez testé les possibilités et les limites de l’IA. Utilisez maintenant vos constats pour débattre et proposer des règles communes aux établissements de la ZESE.</p></div><a class="btn primary" href="charte-ia.html">Continuer vers la Charte IA →</a></section>
+      <div class="nav-actions"><button class="btn ghost" data-go="4">← Expérimentation scolaire</button><a class="btn ghost" href="index.html">Retour aux ateliers</a></div>
+    </section>
+  </section>
+</main>
+
+<div id="rotationToast" class="rotation-toast"><span class="toast-icon">⏱️</span><div><strong>Temps</strong><span>Message</span></div></div>
+
+<dialog id="previewDialog"><div class="preview-dialog"><div class="dialog-head"><div><span class="kicker">Prévisualisation</span><h2>Carnet critique du groupe</h2></div><button id="closePreview" class="dialog-close">×</button></div><div id="previewContent"></div></div></dialog>
+<script src="drive-sync.js"></script>
+<script src="atelier-ia.js"></script>
+</body>
+</html>

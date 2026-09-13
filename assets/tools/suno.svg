@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="96" viewBox="0 0 320 96" role="img" aria-label="Suno">
+<rect width="320" height="96" rx="24" fill="#ffffff"/>
+<rect x="10" y="10" width="300" height="76" rx="18" fill="#1f4dff" opacity="0.08"/>
+<circle cx="54" cy="48" r="26" fill="#1f4dff"/>
+<text x="54" y="56" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" fill="#ffffff">S</text>
+<text x="96" y="42" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" fill="#1f2430">Suno</text>
+<text x="96" y="64" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#5f6672">outil conseillé</text>
+</svg>

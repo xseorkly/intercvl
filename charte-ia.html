@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Charte IA ZESE — Atelier collaboratif</title>
+  <meta name="description" content="Atelier interactif pour construire une charte d'usage de l'intelligence artificielle avec les élèves de la ZESE.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="charter-page">
+<header class="hero charter-hero">
+  <div class="brand-row">
+    <img src="assets/logo-zese.png" alt="IRF Europe du Sud-Est — AEFE" class="brand brand-zese">
+    <div class="hero-title">
+      <span class="eyebrow">INTER-CVL • ZESE • APRÈS LE LAB IA</span>
+      <h1>Construisons notre Charte IA</h1>
+      <p>Expérimenter nous a permis de comprendre. Maintenant, à nous de décider ensemble des règles que nous voulons.</p>
+    </div>
+    <img src="assets/logo-aefe.png" alt="AEFE" class="brand brand-aefe">
+  </div>
+</header>
+
+<div class="ia-topbar ia-topbar-harmonized">
+  <a class="btn ghost" href="index.html">← Retour à l'accueil des ateliers</a>
+  <a class="btn ghost" href="supports/Construire-la-Charte-dusage-de-lIA.pdf" target="_blank">📄 Support PDF</a>
+  <span id="saveStatus" class="save-status">💾 Sauvegarde locale active</span>
+</div>
+
+<main class="layout charter-layout">
+  <aside class="sidebar">
+    <section class="card compact session-card">
+      <h2>Votre table</h2>
+      <label>Nom de la table
+        <input id="tableName" placeholder="Ex. Table 2 — Nicosie">
+      </label>
+      <label class="mt12">Pôle de cette table
+        <select id="poleSelect">
+          <option value="1">🔵 Pôle 1 — Travail scolaire</option>
+          <option value="2">🟢 Pôle 2 — Information</option>
+          <option value="3">🟠 Pôle 3 — Droits</option>
+          <option value="4">🟣 Pôle 4 — Compétences</option>
+        </select>
+      </label>
+      <div id="poleMini" class="pole-mini"></div>
+    </section>
+
+    <nav class="card compact steps charter-steps" aria-label="Parcours">
+      <button class="step active" data-step="0"><span>0</span> Comprendre la mission</button>
+      <button class="step" data-step="1"><span>1</span> Rotation 1</button>
+      <button class="step" data-step="2"><span>2</span> Rotation 2</button>
+      <button class="step" data-step="3"><span>3</span> Rotation 3</button>
+      <button class="step" data-step="4"><span>4</span> Rotation 4</button>
+      <button class="step" data-step="5"><span>5</span> Synthèse du pôle</button>
+      <button class="step" data-step="6"><span>6</span> Assemblée finale</button>
+    </nav>
+
+    <section class="card compact timer-card">
+      <div class="timer-top"><div><span class="small-label" id="timerLabel">Prêt</span><div class="timer-display" id="timerDisplay">10:00</div></div><span id="timerPreset" class="timer-preset">10 min</span></div>
+      <div class="timer-actions"><button class="btn ghost small" id="timerStart">▶</button><button class="btn ghost small" id="timerPause">Ⅱ</button><button class="btn ghost small" id="timerReset">↺</button></div>
+    </section>
+
+    <section class="card compact privacy-card">
+      <h2>🔒 Vos données restent sous votre contrôle</h2>
+      <p>Vos prénoms, idées et articles sont sauvegardés sur cet appareil. Ils sont envoyés uniquement lorsque vous choisissez d’enregistrer le PDF complet ou une copie du carnet dans le Drive de l’équipe organisatrice.</p>
+    </section>
+  </aside>
+
+  <section class="workspace">
+    <section class="panel visible" data-panel="0">
+      <span class="kicker">Votre mission</span>
+      <h2>De l'expérience à des règles communes</h2>
+      <p class="lead">Pendant le LAB IA, vous avez testé ce que l'IA peut faire. Ici, vous allez transformer vos constats, vos désaccords et vos questions en une proposition de <strong>Charte IA pour les établissements de la Zone Europe du Sud-Est</strong>.</p>
+
+      <div class="charter-principle-grid">
+        <article><span>1</span><h3>Observer</h3><p>Partir de situations concrètes et de ce que vous avez réellement vécu avec l'IA.</p></article>
+        <article><span>2</span><h3>Débattre</h3><p>Questionner les idées laissées par les groupes précédents, sans les effacer.</p></article>
+        <article><span>3</span><h3>Transformer</h3><p>Faire passer une idée ou un dilemme à une règle claire et applicable.</p></article>
+        <article><span>4</span><h3>Décider</h3><p>Choisir ensemble les articles qui méritent d'entrer dans la charte ZESE.</p></article>
+      </div>
+
+      <section class="charter-rules-block">
+        <div class="rules-title">
+          <span class="kicker">À lire avant de commencer</span>
+          <h3>🔄 Comment fonctionne l'atelier ?</h3>
+          <p><strong>4 groupes • 4 ordinateurs • 4 pôles • 4 rotations de 10 minutes.</strong> Les ordinateurs ne bougent jamais : ce sont vous, les élèves, qui changez de table au signal.</p>
+        </div>
+
+        <div class="fixed-computers-grid">
+          <article class="fixed-pole pole-1"><span>💻 Ordinateur 1</span><b>🔵 Pôle 1</b><strong>IA et travail scolaire</strong><small>Comment utiliser l'IA sans tricher ?</small></article>
+          <article class="fixed-pole pole-2"><span>💻 Ordinateur 2</span><b>🟢 Pôle 2</b><strong>IA et information</strong><small>Comment éviter la manipulation ?</small></article>
+          <article class="fixed-pole pole-3"><span>💻 Ordinateur 3</span><b>🟠 Pôle 3</b><strong>IA et droits</strong><small>Quelles limites éthiques et juridiques ?</small></article>
+          <article class="fixed-pole pole-4"><span>💻 Ordinateur 4</span><b>🟣 Pôle 4</b><strong>IA et compétences</strong><small>Que doit encore apprendre un humain ?</small></article>
+        </div>
+
+        <div class="rotation-rules-table-wrap">
+          <h4>Votre parcours pendant les 40 minutes</h4>
+          <p class="muted">Chaque groupe passe une fois par chacun des quatre pôles.</p>
+          <table class="rotation-rules-table">
+            <thead><tr><th></th><th>Rotation 1</th><th>Rotation 2</th><th>Rotation 3</th><th>Rotation 4</th></tr></thead>
+            <tbody>
+              <tr><th>Groupe 1</th><td class="p1">Pôle 1</td><td class="p2">Pôle 2</td><td class="p3">Pôle 3</td><td class="p4">Pôle 4</td></tr>
+              <tr><th>Groupe 2</th><td class="p2">Pôle 2</td><td class="p3">Pôle 3</td><td class="p4">Pôle 4</td><td class="p1">Pôle 1</td></tr>
+              <tr><th>Groupe 3</th><td class="p3">Pôle 3</td><td class="p4">Pôle 4</td><td class="p1">Pôle 1</td><td class="p2">Pôle 2</td></tr>
+              <tr><th>Groupe 4</th><td class="p4">Pôle 4</td><td class="p1">Pôle 1</td><td class="p2">Pôle 2</td><td class="p3">Pôle 3</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="student-rules-grid">
+          <article><span>1</span><div><h4>Avant d'écrire, lisez</h4><p>Quand vous arrivez à une nouvelle table, commencez par lire le mur des idées et la mémoire des rotations précédentes.</p></div></article>
+          <article><span>2</span><div><h4>Ne supprimez pas une idée sans raison</h4><p>Vous pouvez la garder, l'enrichir, la reformuler ou la questionner. Si vous n'êtes pas d'accord, expliquez pourquoi.</p></div></article>
+          <article><span>3</span><div><h4>Laissez une trace de votre passage</h4><p>Ajoutez votre prénom et votre établissement, vos idées, votre réaction aux idées précédentes et votre meilleure question.</p></div></article>
+          <article><span>4</span><div><h4>Transformez les idées en règles</h4><p>Dès qu'une idée vous semble importante, proposez une formulation d'article pour la future Charte IA.</p></div></article>
+          <article><span>5</span><div><h4>Au signal : changez de table</h4><p>Après 10 minutes, laissez l'ordinateur sur place et rejoignez le pôle suivant indiqué dans le tableau.</p></div></article>
+          <article><span>6</span><div><h4>Le mur garde la mémoire</h4><p>À chaque rotation, un instantané du mur est conservé. Vous pourrez voir comment les idées ont évolué jusqu'à la synthèse finale.</p></div></article>
+        </div>
+
+        <div class="after-rotations-flow">
+          <h4>🏁 Que se passe-t-il après les 4 rotations ?</h4>
+          <div class="flow-line">
+            <div><b>1</b><span>Après la rotation 4, <strong>revenez à votre ordinateur de départ</strong> et relisez les contributions laissées par les 4 groupes.</span></div>
+            <span class="flow-arrow">→</span>
+            <div><b>2</b><span>Votre groupe aide à faire la <strong>synthèse du pôle de départ</strong>, puis la table génère son <strong>PDF complet</strong> et son fichier de synthèse.</span></div>
+            <span class="flow-arrow">→</span>
+            <div><b>3</b><span>Les 4 synthèses sont réunies dans <strong>l'Assemblée finale</strong>.</span></div>
+            <span class="flow-arrow">→</span>
+            <div><b>4</b><span>Vous débattez, fusionnez et choisissez <strong>10 à 12 articles</strong>.</span></div>
+            <span class="flow-arrow">→</span>
+            <div><b>5</b><span>Vous générez la <strong>Charte IA ZESE finale en PDF</strong>.</span></div>
+          </div>
+        </div>
+
+        <div class="golden-rule"><strong>⭐ La règle la plus importante</strong><span>Vous n'êtes pas là pour trouver rapidement « la bonne réponse ». Vous êtes là pour faire évoluer les idées des autres jusqu'à obtenir des règles que vous pouvez vraiment défendre collectivement.</span></div>
+      </section>
+
+      <section class="lab-bridge">
+        <div class="lab-bridge-head">
+          <div><span class="kicker">Passerelle avec le LAB IA</span><h3>🧪 Qu'est-ce que votre expérience de l'IA vous a appris ?</h3><p>Si vous avez réalisé le LAB IA sur cet appareil, vous pouvez récupérer automatiquement votre bilan. Sinon, ajoutez vos constats au début de chaque rotation.</p></div>
+          <div class="lab-bridge-actions"><button class="btn secondary" id="importLabLocal">Récupérer le LAB IA</button><label class="btn ghost file-btn">Importer une sauvegarde LAB<input type="file" id="importLabFile" accept="application/json" hidden></label></div>
+        </div>
+        <div id="labBridgeSummary" class="lab-bridge-summary"><span class="empty-note">Aucun bilan du LAB IA récupéré pour le moment.</span></div>
+      </section>
+
+      <section class="pole-overview">
+        <div class="section-heading"><div><span class="kicker">Les 4 pôles</span><h3>Quatre grandes questions, aucune réponse toute faite</h3></div></div>
+        <div class="pole-grid">
+          <article class="pole-card pole-1"><b>🔵 Pôle 1</b><h4>IA et travail scolaire</h4><p>Comment utiliser l'IA sans tricher ?</p></article>
+          <article class="pole-card pole-2"><b>🟢 Pôle 2</b><h4>IA et information</h4><p>Comment éviter la manipulation ?</p></article>
+          <article class="pole-card pole-3"><b>🟠 Pôle 3</b><h4>IA et droits</h4><p>Quelles limites juridiques et éthiques ?</p></article>
+          <article class="pole-card pole-4"><b>🟣 Pôle 4</b><h4>IA et compétences</h4><p>Que doit encore apprendre un humain ?</p></article>
+        </div>
+      </section>
+
+      <div class="callout charter-callout"><div class="callout-icon">🔄</div><div><strong>10 minutes par pôle</strong><p>Les élèves changent de table, mais l'appareil reste sur place. À chaque rotation, vous découvrez ce que les autres ont laissé et vous choisissez : garder, enrichir, reformuler ou questionner.</p></div></div>
+      <div class="nav-actions"><span></span><button class="btn primary" data-go="1">Commencer la rotation 1 →</button></div>
+    </section>
+
+    <section class="panel" data-panel="1"><div class="rotation-mount" data-rotation="1"></div></section>
+    <section class="panel" data-panel="2"><div class="rotation-mount" data-rotation="2"></div></section>
+    <section class="panel" data-panel="3"><div class="rotation-mount" data-rotation="3"></div></section>
+    <section class="panel" data-panel="4"><div class="rotation-mount" data-rotation="4"></div></section>
+
+    <section class="panel" data-panel="5">
+      <div class="section-heading"><div><span class="kicker">Après les 4 rotations</span><h2>🎯 Synthèse de votre pôle</h2><p class="lead">Vous avez accumulé beaucoup d'idées. Il faut maintenant sélectionner celles qui sont les plus justes, les plus claires et les plus faciles à appliquer.</p></div><div class="phase-badge done">✓</div></div>
+      <div id="poleSynthesis"></div>
+      <div class="nav-actions"><button class="btn ghost" data-go="4">← Rotation 4</button><button class="btn primary" data-go="6">Aller à l'Assemblée finale →</button></div>
+    </section>
+
+    <section class="panel" data-panel="6">
+      <div class="section-heading"><div><span class="kicker">15 minutes • phase finale</span><h2>🏛️ Assemblée finale — Fabrique de la Charte ZESE</h2><p class="lead">Rassemblez les synthèses des quatre pôles, débattez, fusionnez les idées proches et rédigez une charte de <strong>10 à 12 articles maximum</strong>.</p></div><div class="phase-badge">ZESE</div></div>
+
+      <section class="assembly-import">
+        <div><h3>1. Rassembler les 4 pôles</h3><p>Chaque table télécharge sa <strong>synthèse du pôle</strong>. Sur l'appareil utilisé pour l'Assemblée finale, importez ensuite les quatre fichiers.</p></div>
+        <div class="assembly-import-actions"><button class="btn secondary" id="addCurrentPole">+ Ajouter la synthèse de cette table</button><label class="btn ghost file-btn">📂 Importer des synthèses<input type="file" id="poleImportInput" accept="application/json" multiple hidden></label></div>
+        <div id="importedPoles" class="imported-poles"></div>
+      </section>
+
+      <section class="candidate-section">
+        <div class="section-heading"><div><span class="kicker">2. Débattre et choisir</span><h3>Articles candidats</h3><p>Pour chaque proposition, demandez-vous : est-elle juste ? applicable ? valable pour tous les établissements de la ZESE ?</p></div></div>
+        <div id="candidateBoard" class="candidate-board"></div>
+      </section>
+
+      <section class="charter-builder">
+        <div class="section-heading"><div><span class="kicker">3. Écrire votre texte commun</span><h3>📜 Charte d'usage de l'IA — ZESE</h3></div><div id="articleCounter" class="article-counter">0 / 12 articles</div></div>
+        <label class="preamble-box"><strong>Notre préambule</strong><span>Commencez par : « Nous, élèves des établissements de la Zone Europe du Sud-Est… »</span><textarea id="charterPreamble" placeholder="Nous, élèves des établissements de la Zone Europe du Sud-Est, voulons que l'intelligence artificielle…"></textarea></label>
+        <div class="charter-category-guide"><span class="right">🟢 NOS DROITS</span><span class="responsibility">🔵 NOS RESPONSABILITÉS</span><span class="redline">🔴 NOS LIGNES ROUGES</span><span class="skill">🟣 CE QUE NOUS VOULONS CONTINUER À APPRENDRE</span></div>
+        <div id="finalArticles" class="final-articles"></div>
+        <button class="btn ghost" id="addBlankArticle">+ Ajouter un article</button>
+
+        <div class="final-reflection-grid">
+          <label><strong>❓ La question que nous choisissons de laisser ouverte</strong><textarea id="finalOpenQuestion"></textarea></label>
+          <label><strong>🧠 Ce que ce travail collectif nous a appris</strong><textarea id="finalLearning"></textarea></label>
+        </div>
+      </section>
+
+      <section class="export-box"><div><span class="kicker">Carnet complet de l’atelier</span><h3>Vos traces et votre Charte IA sont prêtes</h3><p>Le PDF final rassemble les 4 rotations, les murs d’idées, les dilemmes, les articles proposés, les synthèses des pôles et la charte finale.</p></div><div class="export-actions"><button class="btn ghost" id="previewBtn">👁 Prévisualiser le dossier complet</button><button class="btn primary" id="pdfBtn">📄 Générer le PDF complet + l’enregistrer dans Drive</button><button class="btn ghost" id="backupBtn">💾 Sauvegarde complète</button><label class="btn ghost file-btn">📂 Restaurer<input type="file" id="restoreInput" accept="application/json" hidden></label><button class="btn ghost" id="driveSyncBtn">☁️ Envoyer une copie du carnet (JSON)</button><button class="btn danger-outline" id="resetAll">Tout effacer</button><p id="driveSyncStatus" class="drive-sync-status"></p></div></section>
+      <div class="nav-actions"><button class="btn ghost" data-go="5">← Synthèse du pôle</button><a class="btn primary" href="index.html">Retour aux ateliers</a></div>
+    </section>
+  </section>
+</main>
+
+<div id="rotationToast" class="rotation-toast"><span class="toast-icon">⏱️</span><div><strong>Temps</strong><span>Message</span></div></div>
+<dialog id="previewDialog"><div class="preview-dialog"><div class="dialog-head"><div><span class="kicker">Prévisualisation</span><h2>Charte IA — ZESE</h2></div><button id="closePreview" class="dialog-close">×</button></div><div id="previewContent"></div></div></dialog>
+<script src="drive-sync.js"></script>
+<script src="charte-ia.js"></script>
+</body>
+</html>
