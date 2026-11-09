@@ -168,7 +168,8 @@ function json_(obj) {
  *
  * Base de données : une Google Sheet (4 onglets créés automatiquement)
  * Fichiers        : dossier Drive PE_FOLDER_ID
- *                     /Groupes  (un PDF par groupe, remplacé à chaque génération)
+ *                     /Groupes   (un PDF par groupe, remplacé à chaque génération)
+ *                     /Syntheses (synthèse automatique par axe, générée par l'admin)
  *                     /Bilans   (documents déposés par les administrateurs)
  *
  * CODE ADMINISTRATEUR : il n'est PAS écrit dans ce fichier (le dépôt GitHub est public).
@@ -222,6 +223,7 @@ function handlePE_(action, p, isGet) {
         case 'pe_adminCheck': peRequireAdmin_(p.code); return { ok: true };
         case 'pe_adminDeleteGroup': return peAdminDeleteGroup_(p);
         case 'pe_uploadBilan': return peUploadBilan_(p);
+        case 'pe_adminAxePdf': return peAdminAxePdf_(p);
         case 'pe_deleteBilan': return peDeleteBilan_(p);
         default: throw new Error('Action inconnue.');
       }
@@ -488,22 +490,15 @@ function esc_(v) {
     .replace(/\n/g, '<br>');
 }
 
-function peGroupHtml_(g, axeLabel, rubriques, contribs) {
-  const membres = peParseMembers_(g.membres).map(m => esc_((m.prenom + ' ' + m.nom).trim())).join(', ');
-  const tz = Session.getScriptTimeZone() || 'Europe/Nicosia';
-  const date = Utilities.formatDate(new Date(), tz, 'dd/MM/yyyy HH:mm');
-  let h = '<html><head><meta charset="utf-8"><style>' +
-    'body{font-family:Arial,Helvetica,sans-serif;color:#242038;font-size:11pt;line-height:1.45}' +
-    'h1{color:#211d47;font-size:22pt;margin:0 0 4px}h2{color:#c20a73;font-size:15pt;margin:22px 0 6px;border-bottom:2px solid #c20a73;padding-bottom:3px}' +
-    'h3{font-size:11.5pt;color:#211d47;margin:14px 0 4px}.meta{color:#5a5670;font-size:10pt;margin:2px 0}' +
-    '.q{background:#f4f0f7;border-left:4px solid #211d47;padding:6px 10px;margin:10px 0 4px}' +
-    '.r{border-left:4px solid #c20a73;padding:4px 10px;margin:4px 0 6px 14px;background:#fbf8fb}' +
-    '.by{color:#6a6580;font-size:9pt}.foot{margin-top:28px;color:#8a8598;font-size:9pt;border-top:1px solid #ddd;padding-top:6px}' +
-    '</style></head><body>';
-  h += '<div class="meta">' + esc_(PE_SCHOOL) + ' — Projet d\'établissement</div>';
-  h += '<h1>' + esc_(axeLabel) + ' — Groupe ' + esc_(g.numero) + '</h1>';
-  h += '<div class="meta"><b>Membres :</b> ' + (membres || '—') + '</div>';
-  h += '<div class="meta">Document généré le ' + esc_(date) + '</div>';
+const PE_PDF_CSS = 'body{font-family:Arial,Helvetica,sans-serif;color:#242038;font-size:11pt;line-height:1.45}' +
+  'h1{color:#211d47;font-size:22pt;margin:0 0 4px}h2{color:#c20a73;font-size:15pt;margin:22px 0 6px;border-bottom:2px solid #c20a73;padding-bottom:3px}' +
+  'h3{font-size:11.5pt;color:#211d47;margin:14px 0 4px}h4{font-size:13pt;color:#211d47;margin:26px 0 2px}.meta{color:#5a5670;font-size:10pt;margin:2px 0}' +
+  '.q{background:#f4f0f7;border-left:4px solid #211d47;padding:6px 10px;margin:10px 0 4px}' +
+  '.r{border-left:4px solid #c20a73;padding:4px 10px;margin:4px 0 6px 14px;background:#fbf8fb}' +
+  '.by{color:#6a6580;font-size:9pt}.foot{margin-top:28px;color:#8a8598;font-size:9pt;border-top:1px solid #ddd;padding-top:6px}';
+
+function peRubriquesHtml_(rubriques, contribs) {
+  let h = '';
   if (!rubriques.length) h += '<p><i>Aucune rubrique n\'a encore été saisie.</i></p>';
   rubriques.forEach(r => {
     h += '<h2>' + esc_(r.titre) + '</h2>';
@@ -522,6 +517,19 @@ function peGroupHtml_(g, axeLabel, rubriques, contribs) {
     }
     if (!rc.length) h += '<p><i>Rubrique vide.</i></p>';
   });
+  return h;
+}
+
+function peGroupHtml_(g, axeLabel, rubriques, contribs) {
+  const membres = peParseMembers_(g.membres).map(m => esc_((m.prenom + ' ' + m.nom).trim())).join(', ');
+  const tz = Session.getScriptTimeZone() || 'Europe/Nicosia';
+  const date = Utilities.formatDate(new Date(), tz, 'dd/MM/yyyy HH:mm');
+  let h = '<html><head><meta charset="utf-8"><style>' + PE_PDF_CSS + '</style></head><body>';
+  h += '<div class="meta">' + esc_(PE_SCHOOL) + ' — Projet d\'établissement</div>';
+  h += '<h1>' + esc_(axeLabel) + ' — Groupe ' + esc_(g.numero) + '</h1>';
+  h += '<div class="meta"><b>Membres :</b> ' + (membres || '—') + '</div>';
+  h += '<div class="meta">Document généré le ' + esc_(date) + '</div>';
+  h += peRubriquesHtml_(rubriques, contribs);
   h += '<div class="foot">Projet d\'établissement — ' + esc_(PE_SCHOOL) + ' — ' + esc_(axeLabel) + ', Groupe ' + esc_(g.numero) + '</div>';
   return h + '</body></html>';
 }
@@ -588,4 +596,48 @@ function peDeleteBilan_(p) {
   if (b.fileId) { try { DriveApp.getFileById(b.fileId).setTrashed(true); } catch (e) { /* ignore */ } }
   peDeleteIds_('Bilans', [b.id]);
   return { ok: true };
+}
+
+
+/** Synthèse automatique d'un axe : tous les groupes dans un seul PDF (dossier « Syntheses »), publiable dans la Restitution. */
+function peAdminAxePdf_(p) {
+  peRequireAdmin_(p.code);
+  const axe = Number(p.axe);
+  if (!(axe >= 1 && axe <= 4)) throw new Error('Axe invalide.');
+  const axeLabel = peClean_(p.axeLabel, 120) || ('Axe ' + axe);
+  const groupes = peRead_('Groupes').filter(g => Number(g.axe) === axe).sort((a, b) => Number(a.numero) - Number(b.numero));
+  if (!groupes.length) throw new Error('Aucun groupe n\'a encore travaillé sur cet axe.');
+  const rubAll = peRead_('Rubriques'), conAll = peRead_('Contributions');
+  const tz = Session.getScriptTimeZone() || 'Europe/Nicosia';
+  const date = Utilities.formatDate(new Date(), tz, 'dd/MM/yyyy HH:mm');
+
+  let h = '<html><head><meta charset="utf-8"><style>' + PE_PDF_CSS + '</style></head><body>';
+  h += '<div class="meta">' + esc_(PE_SCHOOL) + ' — Projet d\'établissement</div>';
+  h += '<h1>Synthèse des travaux — ' + esc_(axeLabel) + '</h1>';
+  h += '<div class="meta">' + groupes.length + ' groupe(s) — document généré le ' + esc_(date) + '</div>';
+  groupes.forEach(g => {
+    const membres = peParseMembers_(g.membres).map(m => esc_((m.prenom + ' ' + m.nom).trim())).join(', ');
+    h += '<h4>Groupe ' + esc_(g.numero) + '</h4><div class="meta"><b>Membres :</b> ' + (membres || '—') + '</div>';
+    h += peRubriquesHtml_(rubAll.filter(r => r.groupeId === g.id), conAll.filter(c => c.groupeId === g.id));
+  });
+  h += '<div class="foot">Projet d\'établissement — ' + esc_(PE_SCHOOL) + ' — Synthèse ' + esc_(axeLabel) + '</div></body></html>';
+
+  const baseName = cleanFilename_('Synthese_auto_Axe' + axe);
+  const pdf = Utilities.newBlob(h, 'text/html', baseName + '.html').getAs('application/pdf').setName(baseName + '.pdf');
+  const folder = getOrCreateFolder_(DriveApp.getFolderById(PE_FOLDER_ID), 'Syntheses');
+  const titre = 'Synthèse automatique — ' + axeLabel;
+
+  // remplace la synthèse automatique précédente de cet axe (publiée ou non)
+  const old = peRead_('Bilans').filter(b => b.axe === String(axe) && b.titre === titre);
+  old.forEach(b => { if (b.fileId) { try { DriveApp.getFileById(b.fileId).setTrashed(true); } catch (e) { /* ignore */ } } });
+  peDeleteIds_('Bilans', old.map(b => b.id));
+
+  const file = folder.createFile(pdf);
+  let published = false, shared = true;
+  if (p.publish) {
+    try { file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW); } catch (e) { shared = false; }
+    peAppend_('Bilans', { id: peId_(), axe: String(axe), titre, fileName: file.getName(), fileUrl: file.getUrl(), fileId: file.getId(), creeLe: peNow_() });
+    published = true;
+  }
+  return { ok: true, fileUrl: file.getUrl(), groupes: groupes.length, published, shared };
 }

@@ -510,6 +510,17 @@
           <p class="pe-hint">Le fichier est rangé dans le dossier « Bilans » du Drive et accessible à toute personne disposant du lien affiché dans la Restitution.</p>
         </form>
       </div>
+      <div class="pe-card">
+        <h2>⚙️ Synthèse automatique d'un axe</h2>
+        <p class="pe-lead">Rassemble en un seul PDF tous les groupes d'un axe (rubriques, questionnements, réflexions). Une nouvelle génération remplace la précédente.</p>
+        <form id="axePdfForm" autocomplete="off">
+          <div class="pe-row">
+            <label>Axe<select name="axe">${AXES.map(a => `<option value="${a.n}">${h(a.titre)}</option>`).join('')}</select></label>
+            <label style="flex:2 1 260px;display:flex;align-items:center;gap:8px;padding-top:22px"><input type="checkbox" name="publish" checked style="width:auto;margin:0"> Publier aussi dans la Restitution</label>
+          </div>
+          <div class="pe-actions"><button class="btn primary" type="submit">Générer la synthèse PDF</button></div>
+        </form>
+      </div>
       <div class="pe-card"><h2>Documents déposés</h2>${bilanRows}</div>
       <div class="pe-card"><h2>Gestion des groupes</h2>${groupRows}</div>`;
   }
@@ -684,6 +695,14 @@
           flash.admin = null;
           renderAll();
         } catch (e) { flash.admin = { type: 'error', text: e.message }; renderAll(); }
+      } else if (form.id === 'axePdfForm') {
+        if (submit) submit.textContent = 'Génération en cours…';
+        const axe = Number(fd.get('axe'));
+        const out = await act({ action: 'pe_adminAxePdf', code: adminCode, axe, axeLabel: axeTitle(axe), publish: fd.get('publish') === 'on' }, '✅ Synthèse générée', 'admin');
+        if (out) {
+          flash.admin = { type: 'ok', text: `Synthèse de ${axeTitle(axe)} générée (${out.groupes} groupe${out.groupes > 1 ? 's' : ''}).` + (out.published ? (out.shared ? ' Elle est visible dans la Restitution.' : ' Publiée, mais le partage par lien est bloqué par ton domaine Google : partage-la dans Drive.') : ' Elle est rangée dans le dossier « Syntheses » du Drive.') };
+          renderAll();
+        }
       } else if (form.id === 'bilanForm') {
         const file = fd.get('fichier');
         if (!file || !file.size) { flash.admin = { type: 'error', text: 'Choisis un fichier.' }; return renderAll(); }

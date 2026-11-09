@@ -89,3 +89,5 @@ La page `projet.html` stocke tout dans la Google Sheet `1KEj4YgP8VOWd-A4YKXFiRpC
 5. Vérifiez : `…/exec?action=pe_data` doit renvoyer `{"ok":true,…,"groupes":[],…}`.
 
 Les intitulés des 4 axes se modifient en haut de `projet.js` (constante `AXES`).
+
+Après mise à jour vers cette version, **redéployez à nouveau** (Nouvelle version) : l'espace Administration propose en plus « Synthèse automatique d'un axe » (PDF de tous les groupes d'un axe, dossier Drive `Syntheses`, publiable dans la Restitution).
