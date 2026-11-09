@@ -64,3 +64,14 @@ Le générateur PDF vérifie désormais le rendu avant l'envoi vers Drive. Le re
 ## Mise en page PDF - version design
 
 Les PDF générés utilisent désormais une mise en page dédiée : couverture harmonisée AEFE/ZESE, sections structurées, blocs de réponses, tableaux améliorés, pagination et pied de page. Le contenu envoyé vers Drive est exactement le même PDF que celui généré localement.
+
+## Projet d'établissement
+
+`projet.html` (+ `projet.js`, `projet.css`) : espace collaboratif du projet d'établissement du Lycée franco-chypriote de Nicosie.
+
+- **Travail** : les professeurs créent ou rejoignent un groupe (par axe), ajoutent des rubriques, des questionnements et des réflexions, puis envoient un PDF par groupe dans le Drive.
+- **Restitution** : tous les travaux, par axe, visibles depuis n'importe quel appareil, avec les synthèses et le bilan déposés par l'administration.
+- **Administration** (code) : dépôt des synthèses par axe et du bilan général, gestion des groupes.
+
+Mise en place du backend : voir `CONFIGURATION_DRIVE.md`, section « Projet d'établissement ».
+

@@ -76,3 +76,16 @@ Après avoir remplacé `Code.gs`, redéployez l'application Web afin d'utiliser 
 ```
 
 Si vous voyez une page Google, un écran de connexion, une erreur HTML ou `driveReady:false`, l'envoi depuis le site ne pourra pas fonctionner correctement.
+
+
+## Projet d'établissement (Code.gs v5) — à faire une seule fois
+
+La page `projet.html` stocke tout dans la Google Sheet `1KEj4YgP8VOWd-A4YKXFiRpCQO2kMqdUkAJgjz87jKMk` (onglets créés automatiquement : Groupes, Rubriques, Contributions, Bilans) et range les fichiers dans le dossier Drive `1JtXAPRibfLMAkrSsocTc8rLcPhhfkHUR` (sous-dossiers `Groupes` et `Bilans`).
+
+1. Remplacez le contenu de `Code.gs` dans Apps Script par la version v5 de ce dépôt.
+2. **Paramètres du projet > Propriétés du script > Ajouter une propriété** : nom `ADMIN_CODE`, valeur = le code administrateur. Le code n'est volontairement pas écrit dans le dépôt (il est public).
+3. Choisissez la fonction `setupProjetEtablissement` puis **Exécuter**. Acceptez les nouvelles autorisations (Google Sheets en plus de Drive). La fenêtre de journal doit afficher `code admin configuré : true`.
+4. **Déployer > Gérer les déploiements > Modifier > Nouvelle version > Déployer** (même URL `/exec`, accès « Tout le monde »).
+5. Vérifiez : `…/exec?action=pe_data` doit renvoyer `{"ok":true,…,"groupes":[],…}`.
+
+Les intitulés des 4 axes se modifient en haut de `projet.js` (constante `AXES`).
