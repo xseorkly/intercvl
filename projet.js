@@ -14,9 +14,70 @@
     { n: 3, titre: 'Axe 3' },
     { n: 4, titre: 'Axe 4' }
   ];
-  const MAX_GROUP_NUMBER = 10;
+  const GROUPS_PER_AXE = 5;   // nombre de groupes proposés par axe (change ce nombre si besoin)
+  const MAX_PRESENT = 6;      // personnes max. devant un même écran
   const MAX_FILE_MB = 12;
   const POLL_MS = 60000;
+
+
+  /* Idées proposées aux groupes (cliquables). Tu peux les adapter librement. */
+  const SUGGESTIONS = [
+    { titre: 'Réussite et parcours des élèves', questions: [
+      'Quels progrès et quels résultats voulons-nous viser pour tous les élèves ?',
+      'Comment repérer plus tôt et accompagner les élèves en difficulté ?',
+      'Comment valoriser l\'excellence et les talents de chacun ?',
+      'Comment assurer la continuité entre la maternelle, l\'élémentaire, le collège et le lycée ?' ] },
+    { titre: 'Plurilinguisme et langues', questions: [
+      'Quelle place voulons-nous donner au français, au grec et à l\'anglais ?',
+      'Comment valoriser les langues d\'origine de nos élèves ?',
+      'Quels parcours, quelles certifications et quels échanges proposer ?' ] },
+    { titre: 'Identité franco-chypriote et ouverture culturelle', questions: [
+      'Qu\'est-ce qui fait la singularité de notre établissement ?',
+      'Quels projets développer avec la communauté chypriote et les partenaires locaux ?',
+      'Comment faire vivre nos valeurs communes au quotidien ?' ] },
+    { titre: 'Climat scolaire, bien-être et vie lycéenne', questions: [
+      'Comment mesurer le climat scolaire et le suivre dans le temps ?',
+      'Comment prévenir le harcèlement et les violences ?',
+      'Quelle place donner à la parole des élèves (CVL, délégués, éco-délégués) ?' ] },
+    { titre: 'École inclusive et besoins éducatifs particuliers', questions: [
+      'Comment accueillir et accompagner chaque élève, quels que soient ses besoins ?',
+      'Quels outils et quelle formation pour les équipes ?',
+      'Comment travailler avec les familles et les partenaires spécialisés ?' ] },
+    { titre: 'Orientation et poursuite d\'études', questions: [
+      'Comment accompagner chaque élève dans son projet, de la 4e à la terminale ?',
+      'Quels liens avec les universités, la France, Chypre et l\'international ?',
+      'Comment suivre le devenir de nos anciens élèves ?' ] },
+    { titre: 'Numérique et intelligence artificielle', questions: [
+      'Quels usages pédagogiques du numérique et de l\'IA voulons-nous développer ?',
+      'Quelles règles communes pour les élèves et pour les adultes ?',
+      'Comment former les équipes et sensibiliser les familles ?' ] },
+    { titre: 'Relations avec les familles et la communauté éducative', questions: [
+      'Comment mieux informer et associer les parents ?',
+      'Quelles instances de dialogue et quelles occasions de rencontre ?',
+      'Comment tenir compte de la diversité des familles et des langues ?' ] },
+    { titre: 'Formation, travail collectif et accueil des personnels', questions: [
+      'Quels besoins de formation repérons-nous dans les équipes ?',
+      'Comment favoriser le travail collectif entre les degrés et les disciplines ?',
+      'Comment accueillir et intégrer les nouveaux personnels ?' ] },
+    { titre: 'Locaux, sécurité, santé et développement durable', questions: [
+      'Quels aménagements prioritaires pour les espaces d\'apprentissage et de vie ?',
+      'Comment renforcer la sécurité et la santé de tous ?',
+      'Quelles actions concrètes pour le développement durable ?' ] },
+    { titre: 'Réseau AEFE, partenariats et rayonnement', questions: [
+      'Quels échanges et quelles mobilités avec les autres établissements du réseau ?',
+      'Quels partenariats construire (culturels, sportifs, associatifs, institutionnels) ?',
+      'Comment faire connaître nos réussites et renforcer notre attractivité ?' ] }
+  ];
+
+  /* Questions utilisables pour n'importe quelle rubrique. */
+  const GENERIC_QUESTIONS = [
+    'Où en sommes-nous aujourd\'hui ? Qu\'observons-nous ?',
+    'Quels sont nos points forts, à conserver et à valoriser ?',
+    'Quelles difficultés ou quels manques constatons-nous ?',
+    'Quels objectifs ambitieux et réalistes pour les 3 à 5 prochaines années ?',
+    'Quelles actions concrètes proposons-nous, et dans quel ordre ?',
+    'Qui est concerné, avec quels moyens, et comment saurons-nous que nous avons réussi ?'
+  ];
 
   /* ------------------------------------------------------------------ *
    * ÉTAT
@@ -28,8 +89,12 @@
   };
 
   let data = store.get('pe_cache', { groupes: [], rubriques: [], contributions: [], bilans: [] });
-  let me = store.get('pe_me', null);              // { prenom, nom }
   let currentGroupId = store.get('pe_group', null);
+  let present = currentGroupId ? store.get('pe_present_' + currentGroupId, []) : [];   // noms complets des personnes devant l'écran
+  let activeAuthor = null;                         // « Qui écrit ? »
+  let slot = null;                                 // { axe, numero } en cours de choix
+  let draft = [];                                  // noms en cours de saisie (écran « Qui est là ? »)
+  let step = (currentGroupId && present.length) ? 'work' : 'choose';   // choose | who | work
   let adminCode = null;                            // gardé en mémoire uniquement
   try { adminCode = sessionStorage.getItem('pe_admin') || null; } catch (e) { adminCode = null; }
   let activeTab = 'travail';
@@ -52,9 +117,14 @@
 
   const axeTitle = n => (AXES.find(a => a.n === Number(n)) || { titre: 'Axe ' + n }).titre;
   const fullName = m => `${m.prenom || ''} ${m.nom || ''}`.trim();
-  const myName = () => (me ? fullName(me) : '');
+  const GROUP_AUTHOR = 'Tout le groupe';
   const sameName = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
-  const isMine = author => me && sameName(author, myName());
+  const canTouch = author => !!adminCode || present.some(n => sameName(n, author)) || (author === GROUP_AUTHOR && present.length > 0);
+  function currentAuthor() {
+    if (activeAuthor && (activeAuthor === GROUP_AUTHOR || present.includes(activeAuthor))) return activeAuthor;
+    if (present.length === 1) return present[0];
+    return null;
+  }
   const groupLabel = g => `${axeTitle(g.axe)} · Groupe ${g.numero}`;
 
   function fmtDate(iso) {
@@ -186,83 +256,95 @@
     return `<div class="${f.type === 'error' ? 'pe-error' : 'pe-ok'}">${h(f.text)}</div>`;
   }
 
-  function renderTravail() {
-    const root = $('#view-travail');
-    if (!me) {
-      root.innerHTML = `
-        <div class="pe-card">
-          <span class="pe-eyebrow" style="color:var(--magenta)">Étape 1</span>
-          <h2>Qui es-tu ?</h2>
-          <p class="pe-lead">Ton nom accompagnera chacune de tes contributions. Il est mémorisé sur cet appareil, tu ne le saisis qu'une fois.</p>
-          <form id="meForm" class="pe-row" autocomplete="off">
-            <label>Prénom<input type="text" name="prenom" required maxlength="60" data-ignore-pending></label>
-            <label>Nom<input type="text" name="nom" required maxlength="60" data-ignore-pending></label>
-            <button class="btn primary" type="submit">Continuer →</button>
-          </form>
-        </div>`;
-      return;
-    }
-
-    const meBar = `
-      <div class="pe-me">
-        <span>👤 Connecté·e en tant que <b>${h(myName())}</b></span>
-        <button class="btn ghost small" data-action="change-me" type="button">Ce n'est pas moi</button>
-      </div>`;
-
-    const group = data.groupes.find(g => g.id === currentGroupId);
-    root.innerHTML = meBar + (group ? renderWorkspace(group) : renderChooser());
+  function groupOf(axe, numero) {
+    return data.groupes.find(g => Number(g.axe) === Number(axe) && Number(g.numero) === Number(numero));
   }
 
+  function renderTravail() {
+    const root = $('#view-travail');
+    const group = data.groupes.find(g => g.id === currentGroupId);
+    if (step === 'work' && group && present.length) { root.innerHTML = renderWorkspace(group); return; }
+    if (step === 'who' && slot) { root.innerHTML = renderWho(); return; }
+    step = 'choose';
+    root.innerHTML = renderChooser();
+  }
+
+  /* Étape 1 : choisir l'axe et le groupe */
   function renderChooser() {
     const blocks = AXES.map(a => {
-      const gs = data.groupes.filter(g => Number(g.axe) === a.n).sort((x, y) => Number(x.numero) - Number(y.numero));
-      const items = gs.length ? gs.map(g => {
-        const nb = data.rubriques.filter(r => r.groupeId === g.id).length;
-        const names = (g.membres || []).map(fullName).join(', ') || '—';
-        const mine = (g.membres || []).some(m => sameName(fullName(m), myName()));
+      const slots = Array.from({ length: GROUPS_PER_AXE }, (_, i) => {
+        const n = i + 1;
+        const g = groupOf(a.n, n);
+        const names = g ? (g.membres || []).map(fullName) : [];
+        const nbR = g ? data.rubriques.filter(r => r.groupeId === g.id).length : 0;
         return `
-          <div class="pe-group-card">
-            <div><b>Groupe ${h(g.numero)}</b> ${mine ? '<span class="pe-chip ok">Tu en fais partie</span>' : ''}
-              <small>${h(names)}</small>
-              <small>${nb} rubrique${nb > 1 ? 's' : ''} · ${h(g.statut || 'En cours')}</small></div>
-            <button class="btn ${mine ? 'primary' : 'secondary'} small" data-action="open-group" data-id="${h(g.id)}" type="button">${mine ? 'Ouvrir' : 'Rejoindre'} →</button>
-          </div>`;
-      }).join('') : '<div class="pe-empty">Aucun groupe pour le moment.</div>';
-      return `<div class="pe-axe-block"><h3>${h(a.titre)}</h3>${items}</div>`;
+          <button class="pe-slot ${g ? 'taken' : ''}" data-action="pick-slot" data-axe="${a.n}" data-num="${n}" type="button">
+            <b>Groupe ${n}</b>
+            <small>${g ? h(names.join(', ') || '—') : 'Libre : ouvre ce groupe'}</small>
+            ${g ? `<small>${nbR} rubrique${nbR > 1 ? 's' : ''}</small>` : ''}
+          </button>`;
+      }).join('');
+      return `<div class="pe-axe-block"><h3>${h(a.titre)}</h3><div class="pe-slots">${slots}</div></div>`;
     }).join('');
-
-    const axeOpts = AXES.map(a => `<option value="${a.n}">${h(a.titre)}</option>`).join('');
-    const numOpts = Array.from({ length: MAX_GROUP_NUMBER }, (_, i) => `<option value="${i + 1}">Groupe ${i + 1}</option>`).join('');
 
     return `
       <div class="pe-card">
-        <span class="pe-eyebrow" style="color:var(--magenta)">Étape 2</span>
-        <h2>Rejoins ton groupe</h2>
-        <p class="pe-lead">Choisis ton groupe dans la liste. Si ton groupe n'existe pas encore, crée-le juste en dessous.</p>
+        <span class="pe-eyebrow" style="color:var(--magenta)">Étape 1 sur 2</span>
+        <h2>Choisis ton axe et ton groupe</h2>
+        <p class="pe-lead">Sur quel axe veux-tu travailler, et avec qui ? Clique sur un groupe : tu pourras ensuite indiquer les noms des personnes qui travaillent sur cet ordinateur (une à ${MAX_PRESENT}).</p>
         ${renderFlash('travail')}
         ${blocks}
-      </div>
+      </div>`;
+  }
+
+  /* Étape 2 : qui est devant l'écran ? */
+  function renderWho() {
+    const g = groupOf(slot.axe, slot.numero);
+    const known = g ? (g.membres || []).map(fullName) : [];
+    const all = [...new Set(known.concat(draft))];
+    const chips = all.length ? all.map(n => `
+      <button class="pe-person ${draft.includes(n) ? 'on' : ''}" data-action="toggle-person" data-name="${h(n)}" type="button">
+        ${draft.includes(n) ? '✅' : '＋'} ${h(n)}${known.includes(n) ? '' : ' <small>(nouveau)</small>'}
+      </button>`).join('') : '<span class="pe-empty">Personne pour le moment : ajoute les noms ci-dessous.</span>';
+
+    return `
       <div class="pe-card">
-        <h2>➕ Créer un groupe</h2>
-        <form id="groupForm" autocomplete="off">
-          <div class="pe-row">
-            <label>Axe<select name="axe">${axeOpts}</select></label>
-            <label>Numéro du groupe<select name="numero">${numOpts}</select></label>
-          </div>
-          <label style="display:block;margin-top:14px;font-weight:700;font-size:.85rem;color:var(--muted)">Autres membres du groupe (un par ligne : Prénom Nom)
-            <textarea class="pe-ta" name="membres" data-ignore-pending placeholder="Marie Dupont&#10;Jean Martin"></textarea>
-          </label>
-          <p class="pe-hint">Tu es ajouté·e automatiquement. Les collègues pourront aussi rejoindre le groupe eux-mêmes.</p>
-          <div class="pe-actions"><button class="btn primary" type="submit">Créer le groupe</button></div>
+        <button class="pe-link" data-action="back-choose" type="button">← Changer de groupe</button>
+        <span class="pe-eyebrow" style="color:var(--magenta);display:block;margin-top:8px">Étape 2 sur 2</span>
+        <h2>${h(axeTitle(slot.axe))} · Groupe ${h(slot.numero)}</h2>
+        <p class="pe-lead">${g ? 'Ce groupe existe déjà. ' : 'Tu ouvres ce groupe. '}Qui travaille <b>sur cet ordinateur</b> en ce moment ? Chaque idée portera le nom de la personne qui l'a écrite.</p>
+        ${known.length ? '<p class="pe-hint" style="margin:0 0 6px">Déjà dans le groupe : clique pour dire qui est présent.</p>' : ''}
+        <div class="pe-people">${chips}</div>
+        <form id="personForm" class="pe-row" autocomplete="off" style="margin-top:14px">
+          <label>Prénom<input type="text" name="prenom" maxlength="60" data-ignore-pending></label>
+          <label>Nom<input type="text" name="nom" maxlength="60" data-ignore-pending></label>
+          <button class="btn secondary" type="submit">➕ Ajouter</button>
         </form>
+        ${renderFlash('travail')}
+        <div class="pe-actions">
+          <button class="btn primary" data-action="start-work" type="button" ${draft.length ? '' : 'disabled'}>Commencer à travailler (${draft.length}) →</button>
+        </div>
+      </div>`;
+  }
+
+  /* Barre « Qui écrit ? » */
+  function renderWhoBar() {
+    const ca = currentAuthor();
+    const chips = present.map(n => `<button class="pe-person ${ca === n ? 'on' : ''}" data-action="set-author" data-name="${h(n)}" type="button">${h(n)}</button>`).join('');
+    const all = present.length > 1 ? `<button class="pe-person ${ca === GROUP_AUTHOR ? 'on' : ''}" data-action="set-author" data-name="${h(GROUP_AUTHOR)}" type="button">👥 ${GROUP_AUTHOR}</button>` : '';
+    return `
+      <div class="pe-who" id="whoBar">
+        <b>✍️ Qui écrit ?</b>
+        <div class="pe-people">${chips}${all}</div>
+        ${ca ? '' : '<span class="pe-hint" style="color:#ad1c28;font-weight:700">Clique sur ton nom avant d\'écrire.</span>'}
+        <button class="pe-link" data-action="change-present" type="button">👥 Modifier les personnes présentes</button>
       </div>`;
   }
 
   function renderContribActions(c, kind) {
-    const mine = isMine(c.auteur) || adminCode;
     return `<span class="pe-mini">
       <button class="pe-link" data-action="edit" data-id="${h(c.id)}" data-kind="${kind}" type="button">Modifier</button>
-      ${mine ? `<button class="pe-link danger" data-action="del-${kind}" data-id="${h(c.id)}" type="button">Supprimer</button>` : ''}
+      ${canTouch(c.auteur) ? `<button class="pe-link danger" data-action="del-${kind}" data-id="${h(c.id)}" type="button">Supprimer</button>` : ''}
     </span>`;
   }
 
@@ -282,6 +364,13 @@
       <div class="pe-by">${h(c.auteur)} · ${h(fmtDate(c.creeLe))}${c.majLe && c.majLe !== c.creeLe ? ' · modifié' : ''}</div>`;
   }
 
+  /** Idées de questionnements : celles de la rubrique si son titre correspond, sinon des questions génériques. */
+  function questionIdeas(r, existingTexts) {
+    const sug = SUGGESTIONS.find(x => sameName(x.titre, r.titre));
+    const list = (sug ? sug.questions.concat(GENERIC_QUESTIONS) : GENERIC_QUESTIONS);
+    return list.filter(q => !existingTexts.some(t => sameName(t, q)));
+  }
+
   function renderRubriqueBody(r, contribs, editable) {
     const questions = contribs.filter(c => c.type === 'question');
     const libres = contribs.filter(c => c.type === 'reflexion' && !c.parentId);
@@ -297,7 +386,7 @@
       if (editable) {
         html += `
           <details class="pe-add"><summary>+ Ajouter une réflexion</summary>
-            <textarea class="pe-ta" id="refl-${h(q.id)}" placeholder="Ta réflexion en réponse à ce questionnement…"></textarea>
+            <textarea class="pe-ta" id="refl-${h(q.id)}" placeholder="Votre réflexion en réponse à ce questionnement…"></textarea>
             <div class="pe-actions"><button class="btn primary small" data-action="add-reflexion" data-rid="${h(r.id)}" data-qid="${h(q.id)}" type="button">Ajouter la réflexion</button></div>
           </details>`;
       }
@@ -314,8 +403,13 @@
     if (!questions.length && !libres.length) html += `<div class="pe-empty">Rubrique vide pour l'instant.</div>`;
 
     if (editable) {
+      const ideas = questionIdeas(r, questions.map(q => q.texte));
       html += `
-        <details class="pe-add q"><summary>+ Ajouter un questionnement</summary>
+        <details class="pe-add q" ${questions.length ? '' : 'open'}><summary>💡 Idées de questionnements</summary>
+          <p class="pe-hint">Clique sur une idée pour l'ajouter à la rubrique (tu pourras la modifier ensuite).</p>
+          <div class="pe-ideas">${ideas.map(t => `<button class="pe-idea" data-action="idea-question" data-rid="${h(r.id)}" data-text="${h(t)}" type="button">+ ${h(t)}</button>`).join('') || '<span class="pe-empty">Toutes les idées sont déjà utilisées.</span>'}</div>
+        </details>
+        <details class="pe-add q"><summary>+ Écrire un questionnement</summary>
           <textarea class="pe-ta" id="quest-${h(r.id)}" placeholder="Quelle question cette rubrique doit-elle explorer ?"></textarea>
           <div class="pe-actions"><button class="btn secondary small" data-action="add-question" data-rid="${h(r.id)}" type="button">Ajouter le questionnement</button></div>
         </details>
@@ -338,6 +432,9 @@
         ? `<span class="pe-chip warn">Le document date du ${h(fmtDate(g.docLe))} — des ajouts ont eu lieu depuis</span>`
         : `<span class="pe-chip ok">✅ Document à jour (${h(fmtDate(g.docLe))})</span>`;
 
+    const usedTitles = rubs.map(r => r.titre);
+    const rubIdeas = SUGGESTIONS.filter(x => !usedTitles.some(t => sameName(t, x.titre)));
+
     const rubHtml = rubs.length ? rubs.map(r => {
       const rc = contribs.filter(c => c.rubriqueId === r.id);
       const titleHtml = editingId === r.id
@@ -347,39 +444,44 @@
         : `<div><h3>${h(r.titre)}</h3><span class="pe-by">créée par ${h(r.auteur)}</span></div>
            <span class="pe-mini">
              <button class="pe-link" data-action="edit" data-id="${h(r.id)}" data-kind="rubrique" type="button">Renommer</button>
-             ${(isMine(r.auteur) || adminCode) ? `<button class="pe-link danger" data-action="del-rubrique" data-id="${h(r.id)}" type="button">Supprimer</button>` : ''}
+             ${canTouch(r.auteur) ? `<button class="pe-link danger" data-action="del-rubrique" data-id="${h(r.id)}" type="button">Supprimer</button>` : ''}
            </span>`;
       return `<article class="pe-rub"><div class="pe-rub-head">${titleHtml}</div><div class="pe-rub-body">${renderRubriqueBody(r, rc, true)}</div></article>`;
-    }).join('') : '<div class="pe-empty" style="margin-top:14px">Aucune rubrique pour le moment : ajoutes-en une ci-dessous pour lancer la réflexion.</div>';
+    }).join('') : '<div class="pe-empty" style="margin-top:14px">Aucune rubrique pour le moment : choisis une idée ou crée la tienne ci-dessous.</div>';
 
     return `
       <div class="pe-card">
         <div class="pe-ws-head">
           <div>
-            <button class="pe-link" data-action="leave-group" type="button">← Changer de groupe</button>
+            <button class="pe-link" data-action="leave-group" type="button">← Choisir un autre groupe</button>
             <h2>${h(groupLabel(g))}</h2>
             <div class="pe-chips">${names}</div>
           </div>
           <div class="pe-actions" style="margin-top:0">
             <button class="btn ghost small" data-action="refresh" type="button">↻ Actualiser</button>
-            <button class="btn ghost small" data-action="edit-members" type="button">👥 Membres</button>
+            <button class="btn ghost small" data-action="edit-members" type="button">✏️ Corriger les noms</button>
           </div>
         </div>
         ${renderFlash('travail')}
         <div id="membersBox"></div>
-        <p class="pe-lead" style="margin-top:12px">Une <b>rubrique</b> = une thématique. Dans chaque rubrique, pose des <b>questionnements</b> puis note vos <b>réflexions</b>. Chaque collègue du groupe peut ajouter sa part.</p>
+        ${renderWhoBar()}
+        <p class="pe-lead" style="margin-top:12px">Une <b>rubrique</b> = une thématique de l'axe. Dans chaque rubrique, posez des <b>questionnements</b> puis notez vos <b>réflexions</b>. Tout le monde peut ajouter sa part : le nom choisi dans « Qui écrit ? » est enregistré avec chaque idée.</p>
         ${rubHtml}
         <div class="pe-card" style="box-shadow:none;background:#fbf9fc">
           <h3>➕ Nouvelle rubrique</h3>
           <form id="rubForm" class="pe-newrub" autocomplete="off">
-            <input type="text" name="titre" placeholder="Titre de la rubrique (ex. : Accueil des familles)" maxlength="200" required>
+            <input type="text" name="titre" placeholder="Titre de la rubrique (ex. : Climat scolaire)" maxlength="200" required>
             <button class="btn primary" type="submit">Ajouter la rubrique</button>
           </form>
+          <details class="pe-add q" ${rubs.length ? '' : 'open'} style="margin-top:12px"><summary>💡 Idées de rubriques pour un projet d'établissement</summary>
+            <p class="pe-hint">Clique sur une idée pour créer la rubrique. Les questionnements associés te seront proposés ensuite.</p>
+            <div class="pe-ideas">${rubIdeas.map(x => `<button class="pe-idea" data-action="idea-rubrique" data-text="${h(x.titre)}" type="button">+ ${h(x.titre)}</button>`).join('') || '<span class="pe-empty">Toutes les idées sont déjà utilisées.</span>'}</div>
+          </details>
         </div>
         <div class="pe-docbox">
           <div>
             <b>📄 Document du groupe</b>
-            <p>Quand votre réflexion est prête, envoie-la au Drive : un PDF récapitulatif (un seul par groupe, remplacé à chaque envoi).</p>
+            <p>Quand votre réflexion est prête, envoyez-la au Drive : un PDF récapitulatif (un seul par groupe, remplacé à chaque envoi).</p>
             <div class="pe-chips">${docState}</div>
           </div>
           <div class="pe-actions" style="margin-top:0">
@@ -548,6 +650,11 @@
     });
   }
 
+  function parseName(full) {
+    const parts = String(full || '').trim().split(/\s+/);
+    return { prenom: parts.shift() || '', nom: parts.join(' ') };
+  }
+
   function currentGroup() { return data.groupes.find(g => g.id === currentGroupId); }
 
   function fileToBase64(file) {
@@ -569,24 +676,40 @@
       case 'print': return window.print();
       case 'resto-axe': restoAxe = btn.dataset.axe; return renderAll();
 
-      case 'change-me':
-        me = null; store.del('pe_me'); currentGroupId = null; store.del('pe_group'); return renderAll();
-
-      case 'open-group': {
-        const g = data.groupes.find(x => x.id === btn.dataset.id);
-        if (!g) return;
-        flash.travail = null;
-        const already = (g.membres || []).some(m => sameName(fullName(m), myName()));
-        if (!already) {
-          btn.disabled = true;
-          const out = await act({ action: 'pe_joinGroup', groupId: g.id, prenom: me.prenom, nom: me.nom }, null, 'travail');
-          if (!out) return;
-        }
-        currentGroupId = g.id; store.set('pe_group', g.id);
+      case 'pick-slot': {
+        slot = { axe: Number(btn.dataset.axe), numero: Number(btn.dataset.num) };
+        const g = groupOf(slot.axe, slot.numero);
+        draft = g ? store.get('pe_present_' + g.id, []) : [];
+        flash.travail = null; step = 'who';
         return renderAll();
       }
+      case 'back-choose':
+        slot = null; step = currentGroupId && present.length ? 'work' : 'choose'; flash.travail = null; return renderAll();
+      case 'toggle-person': {
+        const n = btn.dataset.name;
+        draft = draft.includes(n) ? draft.filter(x => x !== n) : draft.concat(n).slice(0, MAX_PRESENT);
+        return renderAll();
+      }
+      case 'start-work': {
+        if (!draft.length || !slot) return;
+        btn.disabled = true;
+        const out = await act({ action: 'pe_joinOrCreate', axe: slot.axe, numero: slot.numero, membres: draft.map(parseName) }, null, 'travail');
+        if (!out) { btn.disabled = false; return; }
+        currentGroupId = out.groupId; store.set('pe_group', currentGroupId);
+        present = draft.slice(); store.set('pe_present_' + currentGroupId, present);
+        activeAuthor = present.length === 1 ? present[0] : null;
+        slot = null; step = 'work'; flash.travail = null;
+        return renderAll();
+      }
+      case 'change-present': {
+        const g = currentGroup(); if (!g) return;
+        slot = { axe: Number(g.axe), numero: Number(g.numero) };
+        draft = present.slice(); step = 'who';
+        return renderAll();
+      }
+      case 'set-author': activeAuthor = btn.dataset.name; return renderAll();
       case 'leave-group':
-        currentGroupId = null; store.del('pe_group'); editingId = null; flash.travail = null; return renderAll();
+        currentGroupId = null; store.del('pe_group'); present = []; activeAuthor = null; editingId = null; flash.travail = null; step = 'choose'; return renderAll();
 
       case 'edit-members': {
         const g = currentGroup(); if (!g) return;
@@ -613,15 +736,29 @@
         const ta = a === 'add-question' ? $('#quest-' + CSS.escape(rid)) : $('#' + (qid ? 'refl-' + CSS.escape(qid) : 'free-' + CSS.escape(rid)));
         const texte = ta ? ta.value.trim() : '';
         if (!texte) { toast('Écris d\'abord ton texte.'); return; }
+        const auteur = currentAuthor();
+        if (!auteur) { toast('Clique d\'abord sur ton nom dans « Qui écrit ? ».'); $('#whoBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
         btn.disabled = true;
         const out = await act({
           action: 'pe_addContribution', rubriqueId: rid,
-          type: a === 'add-question' ? 'question' : 'reflexion', parentId: qid, texte, auteur: myName()
+          type: a === 'add-question' ? 'question' : 'reflexion', parentId: qid, texte, auteur
         }, a === 'add-question' ? 'Questionnement ajouté' : 'Réflexion ajoutée', 'travail');
         if (!out) btn.disabled = false;
         return;
       }
 
+      case 'idea-question':
+      case 'idea-rubrique': {
+        const auteur = currentAuthor();
+        if (!auteur) { toast('Clique d\'abord sur ton nom dans « Qui écrit ? ».'); $('#whoBar')?.scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+        btn.disabled = true;
+        const payload = a === 'idea-question'
+          ? { action: 'pe_addContribution', rubriqueId: btn.dataset.rid, type: 'question', parentId: '', texte: btn.dataset.text, auteur }
+          : { action: 'pe_addRubrique', groupId: currentGroupId, titre: btn.dataset.text, auteur };
+        const out = await act(payload, a === 'idea-question' ? 'Questionnement ajouté' : 'Rubrique ajoutée', 'travail');
+        if (!out) btn.disabled = false;
+        return;
+      }
       case 'edit': editingId = btn.dataset.id; return renderAll();
       case 'cancel-edit': editingId = null; return renderAll();
       case 'save-edit': {
@@ -638,10 +775,10 @@
       case 'del-question':
       case 'del-reflexion':
         if (!confirm('Supprimer cette contribution ?')) return;
-        return void await act({ action: 'pe_deleteContribution', id: btn.dataset.id, auteur: myName(), code: adminCode || '' }, 'Supprimé', 'travail');
+        return void await act({ action: 'pe_deleteContribution', id: btn.dataset.id, auteur: (data.contributions.find(x => x.id === btn.dataset.id) || {}).auteur || '', code: adminCode || '' }, 'Supprimé', 'travail');
       case 'del-rubrique':
         if (!confirm('Supprimer cette rubrique et tout son contenu ?')) return;
-        return void await act({ action: 'pe_deleteRubrique', rubriqueId: btn.dataset.id, auteur: myName(), code: adminCode || '' }, 'Rubrique supprimée', 'travail');
+        return void await act({ action: 'pe_deleteRubrique', rubriqueId: btn.dataset.id, auteur: (data.rubriques.find(x => x.id === btn.dataset.id) || {}).auteur || '', code: adminCode || '' }, 'Rubrique supprimée', 'travail');
 
       case 'generate': {
         const g = currentGroup(); if (!g) return;
@@ -670,23 +807,22 @@
     const fd = new FormData(form);
     const submit = form.querySelector('[type="submit"]');
 
-    if (form.id === 'meForm') {
+    if (form.id === 'personForm') {
       const prenom = capitalizeName(fd.get('prenom')), nom = capitalizeName(fd.get('nom'));
-      if (!prenom || !nom) return;
-      me = { prenom, nom }; store.set('pe_me', me);
+      if (!prenom && !nom) return;
+      const full = `${prenom} ${nom}`.trim();
+      if (!draft.some(n => sameName(n, full))) draft = draft.concat(full).slice(0, MAX_PRESENT);
       return renderAll();
     }
 
     if (submit) submit.disabled = true;
     try {
-      if (form.id === 'groupForm') {
-        const membres = [{ prenom: me.prenom, nom: me.nom }].concat(parseMembers(fd.get('membres')));
-        const out = await act({ action: 'pe_createGroup', axe: Number(fd.get('axe')), numero: Number(fd.get('numero')), membres }, 'Groupe créé', 'travail');
-        if (out) { currentGroupId = out.groupId; store.set('pe_group', currentGroupId); renderAll(); }
-      } else if (form.id === 'rubForm') {
+      if (form.id === 'rubForm') {
         const g = currentGroup();
         const titre = String(fd.get('titre') || '').trim();
-        if (g && titre) await act({ action: 'pe_addRubrique', groupId: g.id, titre, auteur: myName() }, 'Rubrique ajoutée', 'travail');
+        const auteur = currentAuthor();
+        if (!auteur) { toast('Clique d\'abord sur ton nom dans « Qui écrit ? ».'); }
+        else if (g && titre) await act({ action: 'pe_addRubrique', groupId: g.id, titre, auteur }, 'Rubrique ajoutée', 'travail');
       } else if (form.id === 'adminForm') {
         const code = String(fd.get('code') || '');
         try {
@@ -738,7 +874,7 @@
 
   setInterval(() => {
     if (document.hidden || editingId) return;
-    if (activeTab === 'travail' && pendingText()) return;
+    if (activeTab === 'travail' && (step === 'who' || pendingText())) return;
     if (activeTab === 'admin') return;
     refresh(true);
   }, POLL_MS);

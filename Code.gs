@@ -212,6 +212,7 @@ function handlePE_(action, p, isGet) {
       switch (action) {
         case 'pe_createGroup': return peCreateGroup_(p);
         case 'pe_joinGroup': return peJoinGroup_(p);
+        case 'pe_joinOrCreate': return peJoinOrCreate_(p);
         case 'pe_setMembers': return peSetMembers_(p);
         case 'pe_addRubrique': return peAddRubrique_(p);
         case 'pe_editRubrique': return peEditRubrique_(p);
@@ -393,6 +394,25 @@ function peJoinGroup_(p) {
   const membres = peMembers_(peParseMembers_(g.membres).concat(peMembers_([{ prenom: p.prenom, nom: p.nom }])));
   peUpdate_('Groupes', g.id, { membres: JSON.stringify(membres), majLe: peNow_() });
   return { ok: true };
+}
+
+/** Rejoint le groupe (axe, numéro) avec une ou plusieurs personnes ; le groupe est créé à la première arrivée. */
+function peJoinOrCreate_(p) {
+  const axe = Number(p.axe), numero = Number(p.numero);
+  if (!(axe >= 1 && axe <= 4)) throw new Error('Axe invalide.');
+  if (!(numero >= 1 && numero <= 30)) throw new Error('Numéro de groupe invalide.');
+  const nouveaux = peMembers_(p.membres);
+  if (!nouveaux.length) throw new Error('Indiquez au moins une personne devant l\'écran.');
+  const existing = peRead_('Groupes').filter(g => Number(g.axe) === axe && Number(g.numero) === numero)[0];
+  const now = peNow_();
+  if (!existing) {
+    const g = { id: peId_(), axe, numero, membres: JSON.stringify(nouveaux), statut: 'En cours', creeLe: now, majLe: now, docUrl: '', docId: '', docLe: '' };
+    peAppend_('Groupes', g);
+    return { ok: true, groupId: g.id, created: true };
+  }
+  const membres = peMembers_(peParseMembers_(existing.membres).concat(nouveaux));
+  peUpdate_('Groupes', existing.id, { membres: JSON.stringify(membres) });
+  return { ok: true, groupId: existing.id, created: false };
 }
 
 function peSetMembers_(p) {
