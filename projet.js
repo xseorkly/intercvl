@@ -17,7 +17,7 @@
   const GROUPS_PER_AXE = 5;   // nombre de groupes proposés par axe (change ce nombre si besoin)
   const MAX_PRESENT = 6;      // personnes max. devant un même écran
   const MAX_FILE_MB = 12;
-  const POLL_MS = 60000;
+  const POLL_MS = 30000;
 
 
   /* Idées proposées aux groupes (cliquables). Tu peux les adapter librement. */
@@ -92,6 +92,8 @@
   let currentGroupId = store.get('pe_group', null);
   let present = currentGroupId ? store.get('pe_present_' + currentGroupId, []) : [];   // noms complets des personnes devant l'écran
   let activeAuthor = null;                         // « Qui écrit ? »
+  let viewId = null;                               // groupe consulté en lecture seule
+  let peekOpen = false, peekId = null;             // panneau « voir les autres groupes » pendant le travail
   let slot = null;                                 // { axe, numero } en cours de choix
   let draft = [];                                  // noms en cours de saisie (écran « Qui est là ? »)
   let step = (currentGroupId && present.length) ? 'work' : 'choose';   // choose | who | work
@@ -265,6 +267,7 @@
     const group = data.groupes.find(g => g.id === currentGroupId);
     if (step === 'work' && group && present.length) { root.innerHTML = renderWorkspace(group); return; }
     if (step === 'who' && slot) { root.innerHTML = renderWho(); return; }
+    if (step === 'view' && data.groupes.some(g => g.id === viewId)) { root.innerHTML = renderViewGroup(data.groupes.find(g => g.id === viewId)); return; }
     step = 'choose';
     root.innerHTML = renderChooser();
   }
@@ -278,11 +281,15 @@
         const names = g ? (g.membres || []).map(fullName) : [];
         const nbR = g ? data.rubriques.filter(r => r.groupeId === g.id).length : 0;
         return `
-          <button class="pe-slot ${g ? 'taken' : ''}" data-action="pick-slot" data-axe="${a.n}" data-num="${n}" type="button">
+          <div class="pe-slot ${g ? 'taken' : ''}">
             <b>Groupe ${n}</b>
-            <small>${g ? h(names.join(', ') || '—') : 'Libre : ouvre ce groupe'}</small>
-            ${g ? `<small>${nbR} rubrique${nbR > 1 ? 's' : ''}</small>` : ''}
-          </button>`;
+            <small>${g ? '👥 ' + h(names.join(', ') || '—') : 'Libre'}</small>
+            ${g ? `<small>${nbR} rubrique${nbR > 1 ? 's' : ''} · ${h(g.statut || 'En cours')}</small>` : ''}
+            <div class="pe-slot-actions">
+              <button class="btn ${g ? 'secondary' : 'primary'} small" data-action="pick-slot" data-axe="${a.n}" data-num="${n}" type="button">${g ? 'Rejoindre' : 'Ouvrir'}</button>
+              ${g ? `<button class="btn ghost small" data-action="view-group" data-id="${h(g.id)}" type="button">👁 Voir le travail</button>` : ''}
+            </div>
+          </div>`;
       }).join('');
       return `<div class="pe-axe-block"><h3>${h(a.titre)}</h3><div class="pe-slots">${slots}</div></div>`;
     }).join('');
@@ -291,7 +298,7 @@
       <div class="pe-card">
         <span class="pe-eyebrow" style="color:var(--magenta)">Étape 1 sur 2</span>
         <h2>Choisis ton axe et ton groupe</h2>
-        <p class="pe-lead">Sur quel axe veux-tu travailler, et avec qui ? Clique sur un groupe : tu pourras ensuite indiquer les noms des personnes qui travaillent sur cet ordinateur (une à ${MAX_PRESENT}).</p>
+        <p class="pe-lead">Sur quel axe veux-tu travailler, et avec qui ? Tu vois ici qui travaille déjà dans chaque groupe, et tu peux consulter leur travail (« Voir le travail »). Pour participer, clique sur « Rejoindre » ou « Ouvrir » : tu pourras ensuite indiquer les noms des personnes qui travaillent sur cet ordinateur (une à ${MAX_PRESENT}).</p>
         ${renderFlash('travail')}
         ${blocks}
       </div>`;
@@ -324,6 +331,53 @@
         <div class="pe-actions">
           <button class="btn primary" data-action="start-work" type="button" ${draft.length ? '' : 'disabled'}>Commencer à travailler (${draft.length}) →</button>
         </div>
+      </div>`;
+  }
+
+
+  function renderReadonlyGroup(g) {
+    const rubs = data.rubriques.filter(r => r.groupeId === g.id);
+    const contribs = data.contributions.filter(c => c.groupeId === g.id);
+    const names = (g.membres || []).map(m => `<span class="pe-chip">${h(fullName(m))}</span>`).join('');
+    const body = rubs.length ? rubs.map(r => `
+      <article class="pe-rub"><div class="pe-rub-head"><div><h3>${h(r.titre)}</h3><span class="pe-by">créée par ${h(r.auteur)}</span></div></div>
+        <div class="pe-rub-body">${renderRubriqueBody(r, contribs.filter(c => c.rubriqueId === r.id), false)}</div></article>`).join('')
+      : '<div class="pe-empty">Ce groupe n\'a pas encore créé de rubrique.</div>';
+    return `
+      <div class="pe-chips">${names}<span class="pe-chip ${g.statut === 'Terminé' ? 'ok' : 'warn'}">${h(g.statut || 'En cours')}</span>
+        <span class="pe-chip">Dernière activité : ${h(fmtDate(g.majLe))}</span></div>
+      ${body}`;
+  }
+
+  function renderViewGroup(g) {
+    return `
+      <div class="pe-card">
+        <div class="pe-ws-head">
+          <div><button class="pe-link" data-action="back-choose" type="button">← Retour aux groupes</button>
+            <h2>${h(groupLabel(g))} <span class="pe-by">(lecture seule)</span></h2></div>
+          <div class="pe-actions" style="margin-top:0">
+            <button class="btn ghost small" data-action="refresh" type="button">↻ Actualiser</button>
+            <button class="btn secondary small" data-action="pick-slot" data-axe="${h(g.axe)}" data-num="${h(g.numero)}" type="button">Rejoindre ce groupe</button>
+          </div>
+        </div>
+        ${renderReadonlyGroup(g)}
+      </div>`;
+  }
+
+  /* Panneau « voir ce que font les autres » affiché dans l'espace de travail */
+  function renderPeek(own) {
+    if (!peekOpen) return '';
+    const others = data.groupes.filter(g => g.id !== own.id).sort((a, b) => Number(a.axe) - Number(b.axe) || Number(a.numero) - Number(b.numero));
+    const list = others.length ? others.map(g => `
+      <button class="pe-person ${peekId === g.id ? 'on' : ''}" data-action="peek" data-id="${h(g.id)}" type="button">${h(groupLabel(g))} <small>${h((g.membres || []).map(fullName).join(', '))}</small></button>`).join('')
+      : '<span class="pe-empty">Aucun autre groupe pour le moment.</span>';
+    const shown = others.find(g => g.id === peekId);
+    return `
+      <div class="pe-peek">
+        <b>👀 Ce que font les autres groupes</b>
+        <p class="pe-hint">Clique sur un groupe pour lire son travail, sans quitter le tien. Bouton « Actualiser » pour voir les derniers ajouts.</p>
+        <div class="pe-people">${list}</div>
+        ${shown ? `<h3 style="margin-top:14px">${h(groupLabel(shown))}</h3>${renderReadonlyGroup(shown)}` : ''}
       </div>`;
   }
 
@@ -459,11 +513,13 @@
           </div>
           <div class="pe-actions" style="margin-top:0">
             <button class="btn ghost small" data-action="refresh" type="button">↻ Actualiser</button>
+            <button class="btn ${peekOpen ? 'secondary' : 'ghost'} small" data-action="peek-toggle" type="button">👀 ${peekOpen ? 'Masquer' : 'Voir'} les autres groupes</button>
             <button class="btn ghost small" data-action="edit-members" type="button">✏️ Corriger les noms</button>
           </div>
         </div>
         ${renderFlash('travail')}
         <div id="membersBox"></div>
+        ${renderPeek(g)}
         ${renderWhoBar()}
         <p class="pe-lead" style="margin-top:12px">Une <b>rubrique</b> = une thématique de l'axe. Dans chaque rubrique, posez des <b>questionnements</b> puis notez vos <b>réflexions</b>. Tout le monde peut ajouter sa part : le nom choisi dans « Qui écrit ? » est enregistré avec chaque idée.</p>
         ${rubHtml}
@@ -676,6 +732,9 @@
       case 'print': return window.print();
       case 'resto-axe': restoAxe = btn.dataset.axe; return renderAll();
 
+      case 'view-group': viewId = btn.dataset.id; step = 'view'; return renderAll();
+      case 'peek-toggle': peekOpen = !peekOpen; return renderAll();
+      case 'peek': peekId = peekId === btn.dataset.id ? null : btn.dataset.id; return renderAll();
       case 'pick-slot': {
         slot = { axe: Number(btn.dataset.axe), numero: Number(btn.dataset.num) };
         const g = groupOf(slot.axe, slot.numero);
@@ -684,7 +743,7 @@
         return renderAll();
       }
       case 'back-choose':
-        slot = null; step = currentGroupId && present.length ? 'work' : 'choose'; flash.travail = null; return renderAll();
+        slot = null; viewId = null; step = currentGroupId && present.length && step !== 'view' ? 'work' : 'choose'; flash.travail = null; return renderAll();
       case 'toggle-person': {
         const n = btn.dataset.name;
         draft = draft.includes(n) ? draft.filter(x => x !== n) : draft.concat(n).slice(0, MAX_PRESENT);

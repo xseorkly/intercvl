@@ -89,8 +89,8 @@ textarea.pe-ta{min-height:84px;resize:vertical}
 
 /* --- choix du groupe, personnes présentes, idées --- */
 .pe-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin-top:10px}
-.pe-slot{text-align:left;border:1px dashed #cfc7d6;background:#fdfbfd;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;color:#211d47;min-height:84px;transition:.15s}
-.pe-slot:hover{border-color:var(--magenta);background:#fff5fb;transform:translateY(-1px)}
+.pe-slot{text-align:left;border:1px dashed #cfc7d6;background:#fdfbfd;border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:3px;color:#211d47;min-height:84px}
+.pe-slot:hover{border-color:var(--magenta)}
 .pe-slot.taken{border-style:solid;border-color:#d8d2f5;background:#f7f5fb}
 .pe-slot b{font-size:1.02rem}
 .pe-slot small{color:var(--muted);line-height:1.35}
@@ -106,3 +106,8 @@ textarea.pe-ta{min-height:84px;resize:vertical}
 .pe-idea:hover{background:#ffe6f3}
 .pe-idea:disabled{opacity:.5}
 @media print{.pe-who,.pe-ideas,.pe-slots{display:none!important}}
+
+/* --- vue des autres groupes --- */
+.pe-slot-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.pe-peek{margin-top:14px;padding:16px;border-radius:16px;background:#f4f2ff;border:1px solid #d8d2f5}
+@media print{.pe-peek{display:none!important}}
